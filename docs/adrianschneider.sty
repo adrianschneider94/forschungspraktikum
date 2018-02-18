@@ -1,0 +1,201 @@
+\ProvidesPackage{adrianschneider}
+
+
+% Schriftarten
+\usepackage{helvet}
+\usepackage{times}
+\usepackage{newtxtext,newtxmath}
+\usepackage{bm}
+
+% MetaPost-Interpreter
+\usepackage{luamplib}
+\usepackage[shellescape]{gmp}
+\mplibtextextlabel{enable}
+
+% Sprach-/Encodingeinstellungen
+\usepackage[utf8]{luainputenc}
+%\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[ngerman]{babel}
+\usepackage[autostyle=true,german=quotes]{csquotes}
+
+\everymplib{ verbatimtex \leavevmode etex; }       \everyendmplib{}
+
+% Microtyping
+\usepackage{microtype}
+
+% Einheiten-Satz
+\usepackage{siunitx}
+\sisetup{
+	locale = DE,
+	per-mode=fraction,
+	input-protect-tokens=\dots,
+	table-text-alignment=center,
+	fraction-function=\tfrac
+}
+\DeclareSIUnit{\bit}{bit}
+
+% Beliebige Satzgrößen und Zeilenabstände
+\usepackage{type1cm}         
+
+\setkomafont{pagehead}{\footnotesize}
+\usepackage{scrpage2} 
+\pagestyle{scrheadings} 
+\clearscrheadfoot 
+% Header--------------------------------------------------------------------------------------------- 
+    \ihead{\headmark} 
+    \chead{} 
+    \ohead{\pagemark} 
+
+% Footer --------------------------------------------------------------------------------------------- 
+    \ifoot{} 
+    \cfoot{} 
+    \ofoot{}
+   
+
+\usepackage{multicol}
+\usepackage{enumitem}
+\setkomafont{labelinglabel}{\normalfont}%{\ttfamily}
+\setkomafont{labelingseparator}{\normalfont}
+\makeatletter
+\renewenvironment{labeling}[2][]{%
+  \def\sc@septext{#1}%
+  \list{}{\settowidth{\labelwidth}{{%
+        \usekomafont{labelinglabel}{#2%
+          \usekomafont{labelingseparator}{\sc@septext}}%
+      }}%
+    \leftmargin\labelwidth \advance\leftmargin by \labelsep
+    \let\makelabel\labelinglabel
+    \itemsep-4pt% <- Here
+  }%
+}{%
+  \endlist
+}
+\makeatother
+
+% Index-Erzeugung
+\usepackage{makeidx}
+\usepackage{multicol} % Zweispaltiger Index
+
+% Standard Grafik-Paket
+\usepackage{graphicx}
+\DeclareGraphicsRule{*}{mps}{*}{}
+\usepackage{pgfplots}
+\tikzset{
+  font={\footnotesize\rmfamily}}
+  
+% Sidecap
+\setcounter{topnumber}{1}
+\setcounter{bottomnumber}{1}
+\setcounter{totalnumber}{3}
+\usepackage[font=footnotesize, labelfont=bf, format=plain]{caption}
+\usepackage[facing=yes, margins=centering, capbesideposition=inside]{floatrow}
+\usepackage[section]{placeins}
+\usepackage{subfig}
+
+% No Widows
+\usepackage[all]{nowidow}
+
+% Parskip
+\usepackage{parskip}
+
+% Schaltkreise
+\usetikzlibrary{arrows,positioning}
+\usetikzlibrary{shapes}
+\usetikzlibrary{math}
+\usepackage[european, straightvoltages]{circuitikz}
+ 
+% Fußnoten
+\usepackage[bottom]{footmisc}
+
+% To-Do-Einträge
+\usepackage{todonotes}
+
+% Formelsatz
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+
+\usepackage{physics}
+
+% Tabellen
+\newfloatcommand{capbtabbox}{table}[][\FBwidth]
+\usepackage{wrapfig}
+\usepackage{tabularx}
+\usepackage{booktabs}
+\floatsetup[table]{font=small}
+\floatsetup[capbtabbox]{font=small}
+% Blindtext
+\usepackage{lipsum}
+
+% Mehrzeilige Kommentare
+\usepackage{comment}
+
+% Namensreferenzen
+\usepackage{nameref}
+
+% Referenzen mit Hyperlinks
+\usepackage{hyperref}
+
+% Bibliographie, IEEE-Style, kapitelweise gegliedert
+\usepackage[backend=biber,defernumbers=true,style=ieee]{biblatex}
+\defbibheading{subbibliography}{%
+  \section*{\nameref{refsegment:\therefsection\therefsegment}}}
+ 
+
+% Vektoren, Matritzen, Tensoren
+\newcommand\mat[1]{\bm{#1}}
+\newcommand\ten[1]{\bm{#1}}
+% \renewcommand\vec[1]{\va{#1}}
+
+\newenvironment{psmallmatrix}
+  {\left(\begin{smallmatrix}}
+  {\end{smallmatrix}\right)}
+
+% Operatoren
+\newcommand{\laplace}[1]{\Delta #1}
+
+% Nabla-Operator dünn gesetzt
+\renewcommand{\grad}{\nabla}
+\renewcommand{\div}{\nabla \cdot}
+\newcommand{\rot}{\nabla \times}
+% Nabla-Operator mit Subscript
+\newcommand{\grads}[1]{\nabla_{\!#1}}
+\newcommand{\divs}[1]{\nabla_{\!#1} \cdot}
+
+% Schönes Epsilon
+\renewcommand\epsilon{\varepsilon}
+
+%Differentielles Element
+\newcommand*\dif{\mathop{}\!\mathrm{d}}
+
+% Identität
+\usepackage{bbm}
+\newcommand{\identity}{\mathbbm 1}
+
+%Besselfunktionen
+\DeclareMathOperator{\BesselK}{K}
+\DeclareMathOperator{\BesselI}{I}
+\newcommand{\entspricht}{\mathrel{\hat{=}}}
+
+% Imaginäre Einheit
+\newcommand{\I}{\mathrm{j}}
+\newcommand{\E}{\mathrm{e}}
+% Ein-Halb
+\newcommand{\half}{\dfrac{1}{2}}
+
+% Mathtools
+\usepackage{mathtools}
+
+% Größen mit Text-Subscript
+\newcommand{\omegac}{\omega_\text{c}}
+\newcommand{\ud}{u_\text{d}}
+\newcommand{\omegam}{\omega_\text{m}}
+
+%\usepackage[a4,frame,axes,cross,pdftex,center]{crop}
+
+% Fußnoten durchgängig
+\usepackage{chngcntr} 
+
+% URL-Style
+\urlstyle{same}
