@@ -1,25 +1,180 @@
-import numpy as np
+from numpy import sign
 from forschungspraktikum.functions import langevin, grad_langevin
-from scipy.constants import mu_0
+
+""" Jiles-Atherton-Modell
+
+In diesem Modul werden die Gleichungen des Jiles-Atherton-Modells implementiert.
+
+"""
 
 
-def dm_dhe(self, H, M, H_, M_):
-    delta = np.sign(H - H_)
-    he = H + self.alpha * M
-    man = self.m_sat * langevin(he / self.a)
-    mirr = (M - self.c * man) / (1.0 - self.c)
-    d_mirr_d_he = (man - mirr) / (self.k * delta)
-    d_man_d_he = self.m_sat / self.a * grad_langevin(he / self.a)
-    return (1 - self.c) * d_mirr_d_he + self.c * d_man_d_he
+def anhysteric_magnetization(he, p):
+    """
+
+    Parameters
+    ----------
+    he : float
+        Die effektive magnetische Feldstärke H.
+    p : dict
+        Der Parametervektor p.
+
+    Notes
+    _____
+    Für den Parametervektor gilt:
+        p['alpha']  :math:`\alpha`          Interdomänenkopplung
+        p['a']      :math:`a`               Domänenwanddichte
+        p['m_sat']  :math:`M_\text{sat}`    Sättigungsmagnetisierung
+        p['k']      :math:`k`               Pinning-Energie
+        p['c']      :math:`c`               Magnetisierungsreversibilität
+
+    Returns
+    -------
+    float
+        Die anhysterischen Magnetisierung.
+
+    """
+    a = p['a']
+    m_sat = p['m_sat']
+
+    return m_sat * langevin(he/a)
 
 
-def dm_dh(self, H, M, H_, M_):
-    d_md_he = self.dm_dhe(H, M, H_, M_)
-    return d_md_he / (1 - self.alpha * d_md_he)
+def d_anhysteric_magnetization_wrt_effective_magnetic_field(he, p):
+    """
+
+    Parameters
+    ----------
+    he : float
+        Die effektive magnetische Feldstärke H.
+    p : dict
+        Der Parametervektor p.
+
+    Notes
+    _____
+    Für den Parametervektor gilt:
+        p['alpha']  :math:`\alpha`          Interdomänenkopplung
+        p['a']      :math:`a`               Domänenwanddichte
+        p['m_sat']  :math:`M_\text{sat}`    Sättigungsmagnetisierung
+        p['k']      :math:`k`               Pinning-Energie
+        p['c']      :math:`c`               Magnetisierungsreversibilität
+
+    Returns
+    -------
+    float
+        Das Differential der anhysterischen Magnetisierung nach der effektiven magnetischen Feldstärke H_e, dM_an/dH_e.
+
+    """
+    a = p['a']
+    m_sat = p['m_sat']
+
+    return m_sat/a * grad_langevin(he/a)
 
 
-def dm_db(self, B, M, B_, M_):
-    h = B / mu_0 - M
-    h_ = B_ / mu_0 - M_
-    d_md_he = self.dm_dhe(h, M, h_, M_)
-    return 1 / mu_0 * d_md_he / (1 + (1 - self.alpha) * d_md_he)
+def d_irreversible_magnetization_wrt_effective_magnetic_field(man, mirr, dh_dt, p):
+    """
+
+    Parameters
+    ----------
+    man : float
+        Die anhysterische Magnetisierung.
+    mirr : float
+        Die irreversible Magnetisierung.
+    dh_dt : float
+        Die zeitliche Ableitung der magnetischen Feldstärke.
+    p : dict
+        Der Parametervektor p.
+
+    Notes
+    _____
+    Für den Parametervektor gilt:
+        p['alpha']  :math:`\alpha`          Interdomänenkopplung
+        p['a']      :math:`a`               Domänenwanddichte
+        p['m_sat']  :math:`M_\text{sat}`    Sättigungsmagnetisierung
+        p['k']      :math:`k`               Pinning-Energie
+        p['c']      :math:`c`               Magnetisierungsreversibilität
+
+    Returns
+    -------
+    float
+        Das Differential der irreversiblen Magnetisierung nach der effektiven magnetischen Feldstärke H_e, dM_irr/dH_e.
+
+    """
+    k = p['k']
+    return (man - mirr)/(k * sign(dh_dt))
+
+
+def d_magnetization_wrt_effective_magnetic_field(h, m, dh_dt, p):
+    """
+
+    Parameters
+    ----------
+    h : float
+        Die magnetische Feldstärke H.
+    m : float
+        Die Magnetisierung M.
+    dh_dt : float
+        Die zeitliche Ableitung der magnetischen Feldstärke.
+    p : dict
+        Der Parametervektor p.
+
+    Notes
+    _____
+    Für den Parametervektor gilt:
+        p['alpha']  :math:`\alpha`          Interdomänenkopplung
+        p['a']      :math:`a`               Domänenwanddichte
+        p['m_sat']  :math:`M_\text{sat}`    Sättigungsmagnetisierung
+        p['k']      :math:`k`               Pinning-Energie
+        p['c']      :math:`c`               Magnetisierungsreversibilität
+
+    Returns
+    -------
+    float
+        Das Differential der Magnetisierung nach der effektiven magnetischen Feldstärke H_e, dM/dH_e.
+
+    """
+    alpha = p['alpha']
+    c = p['c']
+
+    he = h + alpha * m
+    m_an = anhysteric_magnetization(he, p)
+    m_irr = (m - c * m_an)/(1.0 - c)
+    dmirr_dhe = d_irreversible_magnetization_wrt_effective_magnetic_field(m_an, m_irr, dh_dt, p)
+    dman_dhe = d_anhysteric_magnetization_wrt_effective_magnetic_field(he, p)
+
+    return (1.0 - c) * dmirr_dhe + c * dman_dhe
+
+
+def d_magnetization_wrt_magnetic_field(h, m, dh_dt, p):
+    """
+
+    Parameters
+    ----------
+    h : float
+        Die magnetische Feldstärke H.
+    m : float
+        Die Magnetisierung M.
+    dh_dt : float
+        Die zeitliche Ableitung der magnetischen Feldstärke.
+    p : dict
+        Der Parametervektor p.
+
+    Notes
+    _____
+    Für den Parametervektor gilt:
+        p['alpha']  :math:`\alpha`          Interdomänenkopplung
+        p['a']      :math:`a`               Domänenwanddichte
+        p['m_sat']  :math:`M_\text{sat}`    Sättigungsmagnetisierung
+        p['k']      :math:`k`               Pinning-Energie
+        p['c']      :math:`c`               Magnetisierungsreversibilität
+
+    Returns
+    -------
+    float
+        Das Differential der Magnetisierung nach der magnetischen Feldstärke H, dM/dH.
+
+    """
+    alpha = p['alpha']
+
+    dm_dhe = d_magnetization_wrt_effective_magnetic_field(h, m, dh_dt, p)
+
+    return dm_dhe/(1.0 - alpha * dm_dhe)

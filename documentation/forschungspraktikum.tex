@@ -85,9 +85,13 @@ Ziel ist es nun, einen differentiellen Zusammenhang zwischen $M$ und $H$ zu find
 \end{equation}
 Es gilt also
 \begin{equation}
-	\dif M = (1-c) \dif\Mirr + c\dif \Man \label{eq:dm},
+	\dif M = (1-c) \dif\Mirr + c\dif \Man \label{eq:dm}
 \end{equation}
-weiterhin stimmt jeweils
+und 
+\begin{equation}
+	\Mirr = \frac{M - c\Man}{1 - c}.
+\end{equation}
+Weiterhin stimmt jeweils
 \begin{align}
 	\dif \Mirr &= \frac{\dif \Mirr}{\dif \He}\dif \He \\
 	\dif \Man &= \frac{\dif \Man}{\dif \He}\dif \He\\
@@ -104,6 +108,10 @@ in dieser Darstellung sind nun die aus den konstituierenden Gleichungen \ref{eq:
 \begin{align}
 	\Rightarrow \frac{\dif M}{\dif \He} &= (1-c) \frac{\dif \Mirr}{\dif \He} + c \frac{\dif \Man}{\dif \He} \label{eq:dm_dhe}
 \end{align}
+Es gilt:
+\begin{equation}
+	\frac{\dif \Man}{\dif \He} = \frac{\Msat}{a} \frac{\dif \Langevin(\He/a)}{\dif(\He/a)}
+\end{equation}
 Abhängig von der Formulierung des elektrodynamischen Problems können nun zwei verschiedene Formulierungen gewählt werden.
 \paragraph{Formulierung mit H-Feld}
 Soll das Problem abhängig vom H-Feld gewählt werden, formuliert man $\dif \He$ wie folgt
