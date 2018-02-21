@@ -3,7 +3,18 @@ from forschungspraktikum.functions import langevin, grad_langevin
 
 """ Jiles-Atherton-Modell
 
-In diesem Modul werden die Gleichungen des Jiles-Atherton-Modells implementiert.
+In diesem Modul werden die Gleichungen des Jiles-Atherton-Modells implementiert. Das Jiles-Atherton-Modell hat fünf 
+Parameter, die in diesem Modul jeweils in einen Parametervektor zusammengefasst werden. Es gilt stets:
+
+
+Notes
+_____
+Für den Parametervektor gilt:
+    p['alpha']  :math:`\alpha`          Interdomänenkopplung
+    p['a']      :math:`a`               Domänenwanddichte
+    p['m_sat']  :math:`M_\text{sat}`    Sättigungsmagnetisierung
+    p['k']      :math:`k`               Pinning-Energie
+    p['c']      :math:`c`               Magnetisierungsreversibilität
 
 """
 
@@ -17,15 +28,6 @@ def anhysteric_magnetization(he, p):
         Die effektive magnetische Feldstärke H.
     p : dict
         Der Parametervektor p.
-
-    Notes
-    _____
-    Für den Parametervektor gilt:
-        p['alpha']  :math:`\alpha`          Interdomänenkopplung
-        p['a']      :math:`a`               Domänenwanddichte
-        p['m_sat']  :math:`M_\text{sat}`    Sättigungsmagnetisierung
-        p['k']      :math:`k`               Pinning-Energie
-        p['c']      :math:`c`               Magnetisierungsreversibilität
 
     Returns
     -------
@@ -48,15 +50,6 @@ def d_anhysteric_magnetization_wrt_effective_magnetic_field(he, p):
         Die effektive magnetische Feldstärke H.
     p : dict
         Der Parametervektor p.
-
-    Notes
-    _____
-    Für den Parametervektor gilt:
-        p['alpha']  :math:`\alpha`          Interdomänenkopplung
-        p['a']      :math:`a`               Domänenwanddichte
-        p['m_sat']  :math:`M_\text{sat}`    Sättigungsmagnetisierung
-        p['k']      :math:`k`               Pinning-Energie
-        p['c']      :math:`c`               Magnetisierungsreversibilität
 
     Returns
     -------
@@ -84,15 +77,6 @@ def d_irreversible_magnetization_wrt_effective_magnetic_field(man, mirr, dh_dt, 
     p : dict
         Der Parametervektor p.
 
-    Notes
-    _____
-    Für den Parametervektor gilt:
-        p['alpha']  :math:`\alpha`          Interdomänenkopplung
-        p['a']      :math:`a`               Domänenwanddichte
-        p['m_sat']  :math:`M_\text{sat}`    Sättigungsmagnetisierung
-        p['k']      :math:`k`               Pinning-Energie
-        p['c']      :math:`c`               Magnetisierungsreversibilität
-
     Returns
     -------
     float
@@ -103,7 +87,7 @@ def d_irreversible_magnetization_wrt_effective_magnetic_field(man, mirr, dh_dt, 
     return (man - mirr)/(k * sign(dh_dt))
 
 
-def d_magnetization_wrt_effective_magnetic_field(h, m, dh_dt, p):
+def d_magnetization_wrt_effective_magnetic_field(m, h, dh_dt, p):
     """
 
     Parameters
@@ -116,15 +100,6 @@ def d_magnetization_wrt_effective_magnetic_field(h, m, dh_dt, p):
         Die zeitliche Ableitung der magnetischen Feldstärke.
     p : dict
         Der Parametervektor p.
-
-    Notes
-    _____
-    Für den Parametervektor gilt:
-        p['alpha']  :math:`\alpha`          Interdomänenkopplung
-        p['a']      :math:`a`               Domänenwanddichte
-        p['m_sat']  :math:`M_\text{sat}`    Sättigungsmagnetisierung
-        p['k']      :math:`k`               Pinning-Energie
-        p['c']      :math:`c`               Magnetisierungsreversibilität
 
     Returns
     -------
@@ -144,7 +119,7 @@ def d_magnetization_wrt_effective_magnetic_field(h, m, dh_dt, p):
     return (1.0 - c) * dmirr_dhe + c * dman_dhe
 
 
-def d_magnetization_wrt_magnetic_field(h, m, dh_dt, p):
+def d_magnetization_wrt_magnetic_field(m, h, dh_dt, p):
     """
 
     Parameters
@@ -158,15 +133,6 @@ def d_magnetization_wrt_magnetic_field(h, m, dh_dt, p):
     p : dict
         Der Parametervektor p.
 
-    Notes
-    _____
-    Für den Parametervektor gilt:
-        p['alpha']  :math:`\alpha`          Interdomänenkopplung
-        p['a']      :math:`a`               Domänenwanddichte
-        p['m_sat']  :math:`M_\text{sat}`    Sättigungsmagnetisierung
-        p['k']      :math:`k`               Pinning-Energie
-        p['c']      :math:`c`               Magnetisierungsreversibilität
-
     Returns
     -------
     float
@@ -175,6 +141,9 @@ def d_magnetization_wrt_magnetic_field(h, m, dh_dt, p):
     """
     alpha = p['alpha']
 
-    dm_dhe = d_magnetization_wrt_effective_magnetic_field(h, m, dh_dt, p)
+    dm_dhe = d_magnetization_wrt_effective_magnetic_field(m, h, dh_dt, p)
 
     return dm_dhe/(1.0 - alpha * dm_dhe)
+
+
+JilesAthertonH = d_magnetization_wrt_magnetic_field
