@@ -53,7 +53,7 @@ Mit dem automatischen Differenzieren ist es möglich, Computerprogramme abzuleit
 \subsection{Vorgehen}
 Als Beispielmodell wird das Jiles-Atherton-Modell verwendet, da es relativ populär ist und somit viele Erfahrungswerte in der wissenschaftlichen Literatur vorhanden sind. Außerdem hat es eine recht kleine Parameteranzahl, was einige Vereinfachungen mit sich bringt. Dieses Modell wird in Abschnitt \ref{sec:jiles-atherton} genauer dargestellt.\\
 \paragraph{Skalares Vorwärtsmodell} Der nächste Schritt ist, das Vorwärtsmodell für den skalaren Fall (keine Ortsauflösung von Feld und Hysterese) zu entwerfen. Dieses Vorwärtsmodell ist effektiv eine Abbildung vom Parameterraum in die Menge der Hysteresekurven -- für jede Parameterkombination erhält man eine (zeitlich diskretisierte) B-H-Kurve.
-\paragraph{Integration} Dies wird durch die Integration der differentiellen Magnetisierung, die das Jiles-Atherton-Modell beschreibt, erreicht. Da die verfügbaren AD-Tools nicht mit den  integrierten Algorithmen der üblichen Mathematik-Pakete umgehen können, muss diese Integration manuell implementiert werden. Als Algorithmus wird zu Beginn ein Runge-Kutta-Verfahren gewählt, welches in einem Artikel als geeignet für das Jiles-Atherton-Modell beschrieben wurde. Eine kurze Übersicht zum Thema der numerischen Integration und den Runge-Kutta-Verfahren ist in Abschnitt \ref{sec:numeric-integration} gegeben.
+\paragraph{Integration} Dies wird durch die Integration der differentiellen Magnetisierung, die das Jiles-Atherton-Modell beschreibt, erreicht. Da die verfügbaren AD-Tools nicht mit den  integrierten Algorithmen der üblichen Mathematik-Pakete umgehen können, muss diese Integration manuell implementiert werden. Als Algorithmus wird ein Runge-Kutta-Verfahren gewählt, welches in einem Fachartikel als geeignet für das Jiles-Atherton-Modell beschrieben wurde. Eine kurze Übersicht zum Thema der numerischen Integration und den Runge-Kutta-Verfahren ist in Abschnitt \ref{sec:numeric-integration} gegeben.
 \paragraph{Inverses Problem} Der nächste Schritt ist der Entwurf des inversen Problems: Gesucht ist nun das Urbild einer Hysteresekurve (Messung) im Parameterraum. Dazu wird zuerst eine Kostenfunktion aufgestellt, von der anschließend mit den Methoden des automatischen Differenzierens Jacobi- und Hessematrix ermittelt werden. Daraufhin wird die Kostenfunktion mit einem geeigneten Algorithmus minimiert. Dadurch erhält man die optimierten Parameter zur gegebenen Messkurve.\\
 \paragraph{Ortsaufgelöstes Vorwärtsmodell}
 Die bisherigen Berechnungen galten stets für ein skalares Modell, der Kern wurde also betrachtet als würde in jedem Punkt das gleiche Feld herrschen. Dies ist jedoch natürlich nur eine Näherung. Daher soll im nächsten Schritt das Jiles-Atherton-Modell auf einen ausgedehnten Kern übertragen werden. Die Zeitdiskretisierung wird genauso wie vorher mit finiten Differenzen (Runge-Kutta-Methode) vorgenommen, die Ortsdiskretisierung basiert auf der Finite-Elemente-Methode. Mit dem ortsaufgelösten Vorwärtsmodell kann nun die Hysterese im gesamten Kern ortsaufgelöst und unter Berücksichtigung der Maxwell-Gleichungen modelliert werden.
@@ -78,8 +78,12 @@ In diesen fünf Modellgleichungen kommen fünf Modellparameter vor:
 	\item[$k$]{Pinning-Energie}
 	\item[$c$]{Magnetisierungsreversibilität}
 \end{labeling}
+Die Funktion $\Langevin(x)$ ist die sogenannte Langevin-Funktion, die die anhysterische Magnetisierungskurve beschreibt. Sie ist definiert durch
+\begin{equation}
+	\Langevin(x) = \coth(x) - \frac{1}{x}
+\end{equation}
 \subsection{Herleitung der Differentiale}
-Ziel ist es nun, einen differentiellen Zusammenhang zwischen $M$ und $H$ zu finden. Dazu:
+Ziel ist es nun, einen differentiellen Zusammenhang zwischen $B$ und $H$ zu finden. Dazu:
 \begin{equation}
 	M \underset{\textref{eq:m_gesamt}}{=} \Mrev + \Mirr \underset{\textref{eq:m_rev}}{=} c (\Man - \Mirr) + \Mirr = c\Man + (1-c)\Mirr.
 \end{equation}
@@ -95,7 +99,7 @@ Weiterhin stimmt jeweils
 \begin{align}
 	\dif \Mirr &= \frac{\dif \Mirr}{\dif \He}\dif \He \\
 	\dif \Man &= \frac{\dif \Man}{\dif \He}\dif \He\\
-	\dif \He & \underset{\textref{eq:h_eff}}{=} \dif H + \alpha \dif M.
+	\dif \He & \underset{\textref{eq:h_eff}}{=} \dif H + \alpha \dif M. \label{eq:dHe}
 \end{align}
 Man erhält nun für $\dif M$ zusammengefasst:
 \begin{align}
@@ -108,50 +112,46 @@ in dieser Darstellung sind nun die aus den konstituierenden Gleichungen \ref{eq:
 \begin{align}
 	\Rightarrow \frac{\dif M}{\dif \He} &= (1-c) \frac{\dif \Mirr}{\dif \He} + c \frac{\dif \Man}{\dif \He} \label{eq:dm_dhe}
 \end{align}
-Es gilt:
+Dabei gilt mit Gleichung \ref{eq:m_an}:
 \begin{equation}
 	\frac{\dif \Man}{\dif \He} = \frac{\Msat}{a} \frac{\dif \Langevin(\He/a)}{\dif(\He/a)}
 \end{equation}
-Abhängig von der Formulierung des elektrodynamischen Problems können nun zwei verschiedene Formulierungen gewählt werden.
-\paragraph{Formulierung mit H-Feld}
-Soll das Problem abhängig vom H-Feld gewählt werden, formuliert man $\dif \He$ wie folgt
+Mit Gleichung \ref{eq:dHe} erhält man:
 \begin{equation}
-	\dif \He \eqr{eq:h_eff} \dif H + \alpha \dif M,
+	\begin{aligned}
+		\dif M &= \frac{\dif M}{\dif \He}\dif \He \\
+		&= \frac{\dif M}{\dif \He}\left(\dif H + \alpha \dif M\right) \\[0.3cm]
+		\Rightarrow  \frac{\dif M}{\dif H} &= \frac{\dif M/\dif \He}{1 - \alpha \dif M/\dif \He}
+	\end{aligned}
 \end{equation}
-also
-\begin{align}
-	\dif M &= \frac{\dif M}{\dif \He} \dif \He \\
-	&= \frac{\dif M}{\dif \He} \left(\dif H + \alpha \dif M\right) \\
-	\Rightarrow \frac{\dif M}{\dif H} &= \frac{\dif M / \dif \He}{1 - \alpha \dif M /\dif \He}
-\end{align}
-\paragraph{Formulierung mit B-Feld} Bei der Formulierung mit der magnetischen Flussdichte formuliert man mit $B = \mu_0(H + M)$
-\begin{align}
-	\dif \He &= \frac{\dif B}{\mu_0} - \dif M + \alpha \dif M \\
-		&= \frac{\dif B}{\mu_0} - (1 - \alpha) \dif M
-\end{align}
-Für $\dif M/\dif B$ erhält man nun
-\begin{align}
-	\dif M &= \frac{\dif M}{\dif \He} \dif \He \\
-	&=\frac{\dif M}{\dif \He}\left(\frac{\dif B}{\mu_0} - (1 - \alpha) \dif M\right) \\
-	\Rightarrow \frac{\dif M}{\dif B} &= \frac{1}{\mu_0}\frac{\dif M/\dif \He}{1 + (1-\alpha) \dif M/\dif \He}
-\end{align}
-\subsection{Abhängigkeiten}
-Die differentielle Magnetisierung ist, wenn man alle Terme ausschreibt, abhängig von $H$, $M$, $\dif H/\dif t$ und dem Parametervektor $\vec{p} = (\alpha, a, \Msat, k, c)^T$:
+Aus $B = \mu_0(H + M)$ folgt nun
 \begin{equation}
-	\frac{\dif M}{\dif H} = \frac{\dif M}{\dif H}\left(H, M, \frac{\dif H}{\dif t}, \vec p \right)
+	\dif B = \mu_0 (\dif H + \dif M)
+\end{equation}
+und somit
+\begin{equation}
+\begin{aligned}
+	\frac{\dif B}{\dif H} &= \mu_0 \left(1 + \frac{\dif M}{\dif H}\right)\\[0.3cm]
+	&= \mu_0 \frac{1 + (1-\alpha)\dif M/\dif \He}{1 - \alpha \dif M/\dif \He}. \label{eq:dB_dH}
+\end{aligned}
+\end{equation}\vspace{0.3cm}
+Entsprechend gilt für die vom $B$-Feld abhängige Formulierung
+\begin{equation}
+	\frac{\dif H}{\dif B} = \frac{1}{\mu_0} \frac{1 - \alpha \dif M/\dif \He}{1 + (1-\alpha)\dif M/\dif \He}
+\end{equation}
+\paragraph{Abhängigkeiten}
+Die Differentials sind, wenn man alle Terme ausschreibt, abhängig von $B$, $H$, $\dif H/\dif t$ und dem Parametervektor $\vec{p} = (\alpha, a, \Msat, k, c)^T$:
+\begin{equation}
+	\frac{\dif B}{\dif H} = f\left(B, H, \frac{\dif H}{\dif t}, \vec p \right)
 \end{equation}
 \section{Numerische Integration}
 \label{sec:numeric-integration}
-Das Jiles-Atherton-Modell beschreibt -- wie oben gezeigt -- die differentielle Magnetisierung $\dif M /\dif H$. Um Aussagen über den zeitlichen Verlauf der Magnetisierung und somit über die Kernverluste zu gewinnen, muss diese differentielle Magnetisierung integriert werden:
+Das Jiles-Atherton-Modell beschreibt -- wie oben gezeigt -- nur einen differentiellen Zusammenhang. Um Aussagen über den zeitlichen Verlauf der Magnetisierung und somit über die Kernverluste zu gewinnen, muss die jeweilige gewöhnliche Differentialgleichung integriert werden, zum Beispiel
 \begin{equation}
-	M(H) = \int \frac{\dif M}{\dif H}\dif H + \text{const.}
-\end{equation}
-beziehungsweise, in zeitabhängiger Formulierung
-\begin{equation}
-	M(t) = \int \frac{\dif M}{\dif H}\frac{\dif H}{\dif t}\dif t + \text{const.}
+B(H) = \int \frac{\dif B}{\dif H}\dif H + \text{const.}
 \end{equation}
 Diese Integration ist analytisch nicht zugänglich und muss numerisch ausgeführt werden. Man verwendet hierfür typischerweise integrierte Lösungen wie den Solver \emph{ode45} in Matlab oder das Python-Äquivalent \emph{scipy.integrate.ode}. Diese Methoden implementieren die üblichen Verfahren, explizit das Runge-Kutta-Fehlberg-Verfahren. Dieses ist eine Variante des klassischen Runge-Kutta-Verfahrens mit adaptiver Schrittweite.\\
-Da im Nachfolgenden jedoch das Ergebnis einer solchen Integration nach dem Parametervektor $\vec p$ differenziert werden soll, benötigt man eine Integrationsmethode, die den Werkzeugen der Automatischen Differentiation zugänglich ist. Aus diesem Grund muss die Integration direkt implementiert werden.
+Da im Nachfolgenden jedoch das Ergebnis einer solchen Integration nach dem Parametervektor $\vec p$ differenziert werden soll, benötigt man einen Integrationsalgorithmus, der den Werkzeugen der Automatischen Differentiation zugänglich ist. Aus diesem Grund muss die Integration manuell implementiert werden.
 \subsection{Explizites Euler-Verfahren}
 Das einfachste Integrationsverfahren ist das explizite Euler-Verfahren (Forward-Euler, Polygonzugverfahren), es entspricht dem einfachsten expliziten Finite-Differenzen-Ansatz:
 \begin{equation}
@@ -239,7 +239,7 @@ Die Gewichte werden meist in einem sogenannten Butcher-Tableau dargestellt
 	            & \gamma_1      & \cdots & \gamma_m
 \end{array}.
 \end{equation*}
-Die entstehenden Gleichungen für die Hilfswerte $k_i$ sind im Allgemeinen implizit, es entsteht also ein nichtlineares Gleichungssystem. Sind jedoch die Werte $k_i$ nur von schon vorher berechneten Werten $k_j, j < i$ abhängig, entsteht ein explizites Verfahren. Die Koeffizienten $\beta_{i,l}$ lassen sich im Butcher-Tableau nun als untere Dreiecksmatrix anordnen. Das klassische Runge-Kutta-Verfahren (RK4) hat beispielsweise das Tableau
+Die entstehenden Gleichungen für die Hilfswerte $k_i$ sind im Allgemeinen implizit, sie müssten also iterativ gelöst werden. Sind jedoch die Werte $k_i$ nur von schon vorher berechneten Werten $k_j, j < i$ abhängig, entsteht ein explizites Verfahren. Die Koeffizienten $\beta_{i,l}$ lassen sich im Butcher-Tableau nun als untere Dreiecksmatrix anordnen -- das klassische Runge-Kutta-Verfahren (RK4) hat beispielsweise das Tableau
 \begin{equation}
 \renewcommand\arraystretch{1.2}
 \begin{array}{c|cccc}
@@ -253,15 +253,60 @@ Die entstehenden Gleichungen für die Hilfswerte $k_i$ sind im Allgemeinen impli
 \end{equation}
 Schreibt man für dieses die einzelnen Schritte aus, so ist die Berechnung des nächsten Wertes im RK4-Verfahren:
 \begin{equation}
+\label{eq:RK4}
 	\begin{aligned}
 		t_n &= t_{n-1} + h \\[0.3cm]
-		k_1 &= f\left(y_{n-1},\enspace t_{n-1}\right) \\
-		k_2 &= f\left(y_{n-1} + hk_1/2,\enspace t_{n-1} + h/2\right) \\
-		k_3 &= f\left(y_{n-1} + hk_2/2,\enspace t_{n-1} + h/2\right) \\
-		k_4 &= f\left(y_{n-1} + hk_3,\enspace t_{n-1} + h\right) \\[0.3cm]
+		k_1 &= f\left(y_{n-1},{} t_{n-1}\right) \\
+		k_2 &= f\left(y_{n-1} + hk_1/2,{} t_{n-1} + h/2\right) \\
+		k_3 &= f\left(y_{n-1} + hk_2/2,{} t_{n-1} + h/2\right) \\
+		k_4 &= f\left(y_{n-1} + hk_3,{} t_{n-1} + h\right) \\[0.3cm]
 		y_n &= y_{n-1} + \tfrac{h}{6}\left(k_1 + 2k_2 + 2k_3 + k_4 \right)
 	\end{aligned}
 \end{equation}
+\subsection{Integration des Jiles-Atherton-Modells}
+Genau dieses klassische Runge-Kutta-Verfahren soll nun auf das Jiles-Atherton-Modell angewendet werden. Das Differential $dB/dH$ aus Gleichung \ref{eq:dB_dH} wird nun als die zu integrierende Funktion $f$ betrachtet. Es gilt also
+\begin{equation}
+	\dif B = f\left(B, H, \tfrac{dH}{dt}, \vec{p}\right)\dif H.
+\end{equation}
+Als Eigabe benötigt der Algorithmus je ein Array für das magnetische Feld $H$ und für die Zeitpunkte $t$, weiterhin eines für die Parameter. Da das RK4-Verfahren für jeden Schritt auch Funktionsauswertungen bei $t_n + h/2$ benötigt, müssen auch für $H$ Werte bei $t_n + h/2$ vorliegen. Dies wird erreicht, indem die Schritte der Integration jeweils zwei Zeitschritte der Eingabedaten umfassen:
+\begin{quote}
+	$H_{2n}$ und $B_n$ beschreiben stets den gleichen Zeitpunkt $t_{2n}$. Für $B$ existieren somit nur zu jedem zweiten Zeitpunkt Werte. Das Ergebnis $B$ hat entsprechend nur die halbe Samplingrate der Eingangsdaten.
+\end{quote}
+Dabei ist wichtig, dass der Zeitpunkt $t_{2n+1}$ stets genau in der Mitte zwischen $t_{2n}$ und $t_{2n+2}$ für alle $n \in \mathbb{N}$ liegt. Da Messdaten typischerweise ohnehin äquidistant vorliegen ist das keine starke Einschränkung.\\
+Entsprechend der Definition in \ref{eq:RK4} gilt nun
+\begin{equation}
+\begin{aligned}
+	h &= H_{2n} - H_{2n - 2} \span\span\span\span\span\\[0.5cm]
+	k_1 &= f\Big(B_{n-1}, &{} H_{2n-2}, &&{} (\tfrac{dH}{dt})_{2n-2},&&{}\vec{p}\Big)\\[0.2cm]
+	k_2 &= f\Big(B_{n-1} + h\tfrac{k_1}{2},&{} H_{2n-1},&&{} (\tfrac{dH}{dt})_{2n-1},&&{}\vec{p}\Big)\\[0.2cm]
+	k_3 &= f\Big(B_{n-1} + h\tfrac{k_2}{2},&{} H_{2n-1},&&{} (\tfrac{dH}{dt})_{2n-1},&&{} \vec{p}\Big)\\[0.2cm]
+	k_4 &= f\Big(B_{n-1} + h k_3, &{} H_{2n}, &&{} (\tfrac{dH}{dt})_{2n},&&{}\vec{p}\Big)\\[0.5cm]
+	B_n &= B_{n-1} + \tfrac{h}{6}(k_1 + 2k_2 + 2k_3 + k_4)  \span\span\span\span\span
+\end{aligned}
+\end{equation}
+Dies beschreibt jeweils einen Schritt des Integrationsverfahrens. Führt man diesen für alle Zeitpunkte durch, erhält man die Magnetisierung $M$ für die gewählte Feldvorgabe $H$ und die Modellparameter $\vec{p}$.\\
+Der beschriebene Algorithmus wurde, um eine hohe numerische Effizienz zu erzielen, in der Programmiersprache \emph{C++} implementiert. Dabei wurde jedoch nur die Variante mit dem H-Feld verwendet, da die andere numerisch sehr instabil erschien. Um diese funktionsfähig zu machen muss vermutlich auf implizite Verfahren zurückgegriffen werden. Eine genauere Untersuchung dieses Problems steht jedoch aus.
+\subsection{Numerische Details}
+Um die Stabilität des Algorithmus zu optimieren, gibt es einige Details, die beachtet werden müssen.
+\paragraph{Die Langevin-Funktion}
+Die Definition der Langevin-Funktion lautet
+\begin{equation}
+	\Langevin(x) = \coth(x) - \frac{1}{x},
+\end{equation}
+die beiden Terme haben jeweils in der Umgebung der $0$ eine Polstelle, sind dabei jedoch etwa gleich groß. Durch die sehr großen Werte, die sich jedoch fast vollständig kompensieren tritt bei numerischen Berechnungen unweigerlich ein Signifikanzverlust auf. Entgegenwirken kann man diesem durch eine Approximation in der Nähe der $0$. Es gilt laut \cite{abramowitz}
+\begin{equation}
+	\coth(x) \approx \frac{1}{x} + \frac{x}{3} - \frac{x^3}{45} + \cdots,
+\end{equation}
+für die Langevinfunktion folgt also in der Nähe der $0$
+\begin{equation}
+	\Langevin(x) \approx \frac{x}{3}.
+\end{equation}
+Entsprechend folgt für die Ableitung:
+\begin{equation}
+	\frac{\dif \Langevin(x)}{\dif x} = \frac{1}{x^2} - \frac{1}{\sinh(x)^2} \approx \frac{1}{3} - \frac{1}{15}x^2 + \cdots
+\end{equation}
+\section{Anwendung des Jiles-Atherton-Modells}
+
 \newpage
 \printbibliography
 \end{document}

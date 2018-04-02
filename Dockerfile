@@ -1,5 +1,23 @@
-FROM debian:latest
+FROM ubuntu:latest
 MAINTAINER Adrian Schneider <post@adrian-schneider.de>
+
+# Install basic stuff
+RUN apt-get update && apt-get install -y build-essential g++ python-dev autotools-dev libicu-dev build-essential \
+    libbz2-dev cmake git wget curl
+
+# Install Boost
+RUN cd && wget https://dl.bintray.com/boostorg/release/1.66.0/source/boost_1_66_0.tar.gz \
+    && tar xzvf boost_1_66_0.tar.gz \
+    && cd boost_1_66_0 \
+    && ./bootstrap.sh --prefix=/usr/local \
+    && ./b2 \
+    && ./b2 install
+
+# Install CppAD
+RUN cd && git clone https://github.com/coin-or/CppAD.git \
+    && cd CppAD \
+    && cmake -D cppad_prefix=/usr/local . \
+    && make install
 
 # Install Miniconda3
 RUN apt-get -qq update && apt-get -qq -y install curl bzip2 \
@@ -14,23 +32,10 @@ RUN apt-get -qq update && apt-get -qq -y install curl bzip2 \
     && rm -rf /var/lib/apt/lists/* /var/log/dpkg.log \
     && conda clean --all --yes
 
-ENV PATH /opt/conda/bin:$PATH
 
-# Install standard Python stuff
-RUN conda update --all && conda install -y numpy scipy jupyter matplotlib nose
+# Install Python packages
+RUN conda install -y numpy scipy jupyter matplotlib nose
 
-# Install PY-ADOL-C
-# RUN apt-get update && apt-get install -y wget git build-essential autotools-dev libtool autoconf
-# RUN cd /usr/local && wget https://dl.bintray.com/boostorg/release/1.66.0/source/boost_1_66_0.tar.bz2 && \
-#     tar --bzip2 -xf boost_1_66_0.tar.bz2 && cd boost_1_66_0 && ./bootstrap.sh && ./b2 install
-# RUN mkdir install && cd install && git clone https://github.com/b45ch1/pyadolc.git && cd pyadolc && pip install -e .
+# Install PyCppAD
 
-# Algopy
-RUN pip install algopy
-# Py-ADOLC
-
-VOLUME /forschungspraktikum/ /certificates/
-EXPOSE 8888
-ADD jupyter_notebook_config.py /etc/jupyter/
-WORKDIR /forschungspraktikum/
-ENTRYPOINT pip install -e /forschungspraktikum/ && cd demo && jupyter notebook --allow-root
+ENTRYPOINT /bin/bash

@@ -1,9 +1,9 @@
-from numpy import sign
-from forschungspraktikum.functions import langevin, grad_langevin
+import numpy as np
+from forschungspraktikum.jiles_atherton.functions_ import langevin, grad_langevin
 
 """ Jiles-Atherton-Modell
 
-In diesem Modul werden die Gleichungen des Jiles-Atherton-Modells implementiert. Das Jiles-Atherton-Modell hat fünf 
+In diesem Modul werden die Gleichungen des Jiles-Atherton-Modells implementiert. Das Jiles-Atherton-Modell hat fünf
 Parameter, die in diesem Modul jeweils in einen Parametervektor zusammengefasst werden. Es gilt stets:
 
 
@@ -84,7 +84,7 @@ def d_irreversible_magnetization_wrt_effective_magnetic_field(man, mirr, dh_dt, 
 
     """
     k = p['k']
-    return (man - mirr)/(k * sign(dh_dt))
+    return (man - mirr)/(k * np.sign(dh_dt))
 
 
 def d_magnetization_wrt_effective_magnetic_field(m, h, dh_dt, p):
@@ -147,3 +147,5 @@ def d_magnetization_wrt_magnetic_field(m, h, dh_dt, p):
 
 
 JilesAthertonH = d_magnetization_wrt_magnetic_field
+
+
