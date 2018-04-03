@@ -137,7 +137,7 @@ namespace jiles_atherton {
             k2 = d_magnetic_field_wrt_magnetic_flux<T>(H[n - 1] + k1 / 2.0, B[2 * n - 1], dB[2 * n - 1], params) * h;
             k3 = d_magnetic_field_wrt_magnetic_flux<T>(H[n - 1] + k2 / 2.0, B[2 * n - 1], dB[2 * n - 1], params) * h;
             k4 = d_magnetic_field_wrt_magnetic_flux<T>(H[n - 1] + k3, B[2 * n], dB[2 * n], params) * h;
-            std::cout << k1 <<std::endl;
+            std::cout << k1 << " " << k2 << " " << k3 << " " << k4 <<std::endl;
 
             H[n] = H[n - 1] + 1.0 / 6.0 * (k1 + 2.0 * k2 + 2.0 * k3 + k4);
         }

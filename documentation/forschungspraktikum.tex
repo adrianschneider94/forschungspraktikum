@@ -29,7 +29,7 @@
 \newpage
 \section{Einleitung}
 \subsection{Zielsetzung}
-Ziel des Projektes ist es, die Kernverluste in induktiven Bauelementen besser vorhersagen zu können als mit den bisherigen Methoden. Das typische Vorgehen bei der Abschätzung dieser Verluste basiert derzeit meist auf der Steinmetz-Formel bzw. auf ihren Erweiterungen. Diese beschreibt rein phänomenologisch die Verluste abhängig von Flussdichte, Frequenz und Temperatur. Dabei wird jedoch weder die Stromform noch die Kernform einbezogen.\\
+Ziel des Projektes ist es, die Kernverluste in induktiven Bauelementen besser vorhersagen zu können als mit den bisherigen Methoden. Das typische Vorgehen bei der Abschätzung dieser Verluste basiert derzeit meist auf der Steinmetz-Formel bzw. auf ihren Erweiterungen. Diese beschreibt rein phänomenologisch die Verluste abhängig von Flussdichte, Frequenz und Temperatur. Dabei wird jedoch weder die Strom- noch die Kernform einbezogen.\\
 \subsection{Hysteresemodelle}
 Um hier eine Verbesserung erzielen zu können, ist es notwendig, die Hysterese transient zu beschreiben und mit diesem Modell die Verluste zu berechnen. Die Wissenschaft hat hierfür einige Modelle hervorgebracht:
 \begin{labeling}{Krasnosel’skii–Pokrovskii}
@@ -43,7 +43,7 @@ Um hier eine Verbesserung erzielen zu können, ist es notwendig, die Hysterese t
 	\item[Duhem]{}
 	\item[VINCH]{}
 \end{labeling}
-Die verschiednen Modelle unterscheiden sich insbesondere in der Anzahl der Modellparameter. Während das Jiles-Atherton mit fünf Parametern auskommt, können etwa im Preisach oder VINCH-Modell beliebig viele Parameter eingeführt werden -- dies führt dazu, dass gemessene Hysteresekurven genauer angenähert werden können, jedoch vermutlich die Allgemeingültigkeit ein Stück weit verloren geht.\\
+Die verschiednen Modelle unterscheiden sich insbesondere in der Anzahl der Modellparameter. Während das Jiles-Atherton mit fünf Parametern auskommt, können etwa im Preisach- oder VINCH-Modell beliebig viele Parameter eingeführt werden -- dies führt dazu, dass gemessene Hysteresekurven genauer angenähert werden können, jedoch vermutlich die Allgemeingültigkeit ein Stück weit verloren geht.\\
 Ein entscheidendes Problem bei fast allen erwähnten Modellen ist die Parameteridentifikation -- die Modellparameter müssen an Messkurven angeglichen werden. Bei dem Modell der komplexen Permeabilität fällt dies noch recht leicht, da hier einer einfachen Leistungsmessung ausreicht (noch dazu ist das Modell linear). Für die anderen Modelle, die alle nichtlinear sind, gestaltet sich dies jedoch deutlich schwieriger.
 \subsection{Parameteridentifikation}
 Das übliche Vorgehen ist, eine Kostenfunktion aufzustellen, die ihr Minimum dann annimmt, wenn Messdaten und Simulationsdaten am besten übereinstimmen. Diese Kostenfunktion muss anschließend mit einem geeigneten Algorithmus minimiert werden. Für nichtlineare Modelle wie die vorliegenden gestaltet sich dies jedoch oft sehr schwierig -- die meisten Algorithmen benötigen für eine schnelle Konvergenz die Jacobi- oder sogar auch die Hesse-Matrix der zu minimierenden Kostenfunktion. Diese sind analytisch jedoch nicht zugänglich. Ein alternativer Ansatz ist, gradientenfreie Algorithmen zu verwenden (genetische Algorithmen, linear Programming etc.). Dies wurde in der Literatur auch wiederholt vorgenommen -- die Konvergenz kann hierbei jedoch nicht garantiert werden, noch dazu sind diese Algorithmen recht langsam.
@@ -140,7 +140,7 @@ Entsprechend gilt für die vom $B$-Feld abhängige Formulierung
 	\frac{\dif H}{\dif B} = \frac{1}{\mu_0} \frac{1 - \alpha \dif M/\dif \He}{1 + (1-\alpha)\dif M/\dif \He}
 \end{equation}
 \paragraph{Abhängigkeiten}
-Die Differentials sind, wenn man alle Terme ausschreibt, abhängig von $B$, $H$, $\dif H/\dif t$ und dem Parametervektor $\vec{p} = (\alpha, a, \Msat, k, c)^T$:
+Die Differentiale sind, wenn man alle Terme ausschreibt, abhängig von $B$, $H$, $\dif H/\dif t$ und dem Parametervektor $\vec{p} = (\alpha, a, \Msat, k, c)^T$:
 \begin{equation}
 	\frac{\dif B}{\dif H} = f\left(B, H, \frac{\dif H}{\dif t}, \vec p \right)
 \end{equation}
@@ -306,7 +306,307 @@ Entsprechend folgt für die Ableitung:
 	\frac{\dif \Langevin(x)}{\dif x} = \frac{1}{x^2} - \frac{1}{\sinh(x)^2} \approx \frac{1}{3} - \frac{1}{15}x^2 + \cdots
 \end{equation}
 \section{Anwendung des Jiles-Atherton-Modells}
+Im folgenden Abschnitt sollen nun einige simulierte Kurven präsentiert und anhand dieser die Eigenschaften des Modells erläutert werden.
+\begin{figure}[h]
+\fcapside[\FBwidth]{\caption[Hystereseschar]{Schar von Hysteresekurven für verschiedene Aussteuerungen. Der nicht-hysterische Teil wird von der Langevinfunktion festgelegt.}\label{fig:hysterseschar}}{
+	
+\begin{mplibcode}
+input graph;
+beginfig(1);
+	lx := \mpdim{\textwidth}/2.2;
+	ly := 3cm;
+	pickup pencircle scaled 0.3bp;
+	ahlength := 1mm;
+	drawarrow (0,ly/2) -- (lx, ly/2);
+	drawarrow (lx/2,0) -- (lx/2, ly);
+	label.urt(textext("\footnotesize $B$"), (lx/2, ly));
+	label.lrt(textext("\footnotesize $H$"), (lx, ly/2));
+	draw begingraph(lx,ly);    gdraw "data/hysteresis1.txt";    gdraw "data/hysteresis2.txt";    gdraw "data/hysteresis3.txt";    gdraw "data/hysteresis4.txt";    gdraw "data/hysteresis5.txt";    gdraw "data/hysteresis6.txt";    gdraw "data/hysteresis7.txt";
+	itick.lft(textext(""),0) withcolor white;
+	frame.lft withcolor white;
+	endgraph;
+	path bounds;
+	bounds := (0, ypart llcorner currentpicture) -- lrcorner currentpicture -- urcorner currentpicture --(0, ypart ulcorner currentpicture) -- cycle;
+	setbounds currentpicture to bounds;
+endfig;
+\end{mplibcode}
+}
+\end{figure}
+\paragraph{Hysteresekurven} Als erstes Beispiel dient eine Kurvenschar, die Hysteresekurven für verschiedene Aussteuerungen zeigt (Abbildung \ref{fig:hysterseschar}). Man erkennt, dass das Modell die Charakteristik typischer ferromagnetischer Hysteresekurven nachbildet:\\
+Bei hohen Feldstärken wächst die Induktion stark an, dies ist die typische Sättigungserscheinung bei Kernmaterialien. Nachdem der Umkehrpunkt erreicht wurde, läuft die Kurve auf einem anderen Weg zurück (Hyterese), sodass die Flussdichte bei verschwindender Feldstärke nicht mehr den Wert $0$ annimmt, sondern eine Restmagnetisierung (Remanenz) übrig bleibt. Im weiteren Verlauf kreuzt die Flussdichte nun die $H$-Achse, den entsprechenden Achsenabschnitt nennt man Koerzitivfeldstärke.
+\begin{figure}[h]
+\fcapside[\FBwidth]{\caption[Hystereseschar]{Einzelne Hysteresekurve mit Neukurve. }\label{fig:single_curve}}{
+	
+\begin{mplibcode}
+input graph;
+beginfig(1);
+	lx := \mpdim{\textwidth}/2.2;
+	ly := 3cm;
+	pickup pencircle scaled 0.3bp;
+	ahlength := 1mm;
+	drawarrow (0,ly/2) -- (lx, ly/2);
+	drawarrow (lx/2,0) -- (lx/2, ly);
+	pickup pencircle scaled 0.5bp;
+	label.urt(textext("\footnotesize $B$"), (lx/2, ly));
+	label.lrt(textext("\footnotesize $H$"), (lx, ly/2));
+	draw begingraph(lx,ly);    gdraw "data/single_hysteresis.txt";
+	itick.lft(textext(""),0) withcolor white;
+	frame.llft withcolor white;
+	endgraph;
+	path bounds;
+	bounds := (0, ypart llcorner currentpicture) -- lrcorner currentpicture -- urcorner currentpicture --(0, ypart ulcorner currentpicture) -- cycle;
+	setbounds currentpicture to bounds;
+endfig;
+\end{mplibcode}
+}
+\end{figure}
+\par In Abbildung \ref{fig:single_curve} ist eine einzelne Hysteresekurve gezeigt. In diesem Fall ist auch die Neukurve dargestellt, die vom Modell ebenfalls repliziert wird. Im Gegensatz zu den meisten Messkurven beginnt die Neukurve im Jiles-Atherton-Modell jedoch näherungsweise linear. 
+\subsection{Stromanregung}
+Wie oben gezeigt, kann man entweder $\dif B/\dif H$ oder $\dif H/\dif B$ integrieren. Gibt man einen Strom vor, so ist $\dif H$ festgelegt, man verwendet also $\dif B/\dif H$. Wird der Kern mit einer Spannung angeregt, nutzt man $\dif H/\dif B$. Im Allgemeinen wird man den Kern ohnehin eingebettet in einem Netzwerk betrachten und auch die Integration entsprechend anpassen.\\
+\begin{figure}[h]
+\fcapside[\FBwidth]{\caption{Verlauf von $H$- und $B$-Feld bei sinusförmiger Stromanregung. Durch die nichtlinearen Kerneigenschaften wird die Form des Sinus stark verbreitert, entsprechend treten hohe Steigungen bei den Nulldurchgängen der magnetischen Flussdichte auf.}\label{fig:current_hb}}{
+	
+\begin{mplibcode}
+input graph;
+beginfig(1);
+	lx := \mpdim{\textwidth}/2.2;
+	ly := 3cm;
+	pickup pencircle scaled 0.3bp;
+	ahlength := 1mm;
+	drawarrow (0,ly/2) -- (lx, ly/2);
+	drawarrow (lx/2,0) -- (lx/2, ly);
+	pickup pencircle scaled 0.5bp;
+	label.urt(textext("\footnotesize $H_\text{norm}$, $B_\text{norm}$"), (lx/2, ly));
+	label.lrt(textext("\footnotesize $t$"), (lx, ly/2));
+	draw begingraph(lx,ly);    gdraw "data/stromanregung/current_b.txt" dashed evenly;    gdraw "data/stromanregung/current_h.txt";
+	itick.lft(textext(""),0) withcolor white;
+	frame.llft withcolor white;
+	endgraph;
+	
+	picture legend;
+	legend = image(
+	label.rt(textext("\footnotesize H-Feld"), (0.7*lx, 0.3*ly));
+	label.rt(textext("\footnotesize B-Feld"), (0.7*lx, 0.15*ly));
+	draw (0.60*lx, 0.3*ly) -- (0.65*lx, 0.3*ly);
+	draw (0.60*lx, 0.15*ly) -- (0.65*lx, 0.15*ly) dashed evenly;
+	);
+	unfill bbox legend;
+	draw bbox legend withpen pencircle scaled 0.1bp;
+	draw legend;
 
+	path bounds;
+	bounds := (0, ypart llcorner currentpicture) -- lrcorner currentpicture -- urcorner currentpicture --(0, ypart ulcorner currentpicture) -- cycle;
+	setbounds currentpicture to bounds;
+endfig;
+\end{mplibcode}
+}
+\end{figure}
+
+\begin{figure}[h]
+\fcapside[\FBwidth]{\caption{Verlauf von Strom und Spannung bei sinusförmiger Stromanregung. Die steilen Flanken der Hysteresekurve führen zu großen Spannungsspitzen durch $\rot E = - \partial B/\partial t$.}\label{fig:current_ui}}{
+	
+\begin{mplibcode}
+input graph;
+beginfig(1);
+	lx := \mpdim{\textwidth}/2.2;
+	ly := 3cm;
+	pickup pencircle scaled 0.3bp;
+	ahlength := 1mm;
+	drawarrow (0,ly/2) -- (lx, ly/2);
+	drawarrow (lx/2,0) -- (lx/2, ly);
+	pickup pencircle scaled 0.5bp;
+	label.urt(textext("\footnotesize $i_\text{norm}$, $u_\text{norm}$"), (lx/2, ly));
+	label.lrt(textext("\footnotesize $t$"), (lx, ly/2));
+	draw begingraph(lx,ly);    gdraw "data/stromanregung/current_u.txt" dashed evenly;    gdraw "data/stromanregung/current_h.txt";
+	itick.lft(textext(""),0) withcolor white;
+	frame.llft withcolor white;
+	endgraph;
+	
+	picture legend;
+	legend = image(
+	label.rt(textext("\footnotesize Strom"), (0.7*lx, 0.3*ly));
+	label.rt(textext("\footnotesize Spannung"), (0.7*lx, 0.15*ly));
+	draw (0.60*lx, 0.3*ly) -- (0.65*lx, 0.3*ly);
+	draw (0.60*lx, 0.15*ly) -- (0.65*lx, 0.15*ly) dashed evenly;
+	);
+	unfill bbox legend;
+	draw bbox legend withpen pencircle scaled 0.1bp;
+	draw legend;
+
+	path bounds;
+	bounds := (0, ypart llcorner currentpicture) -- lrcorner currentpicture -- urcorner currentpicture --(0, ypart ulcorner currentpicture) -- cycle;
+	setbounds currentpicture to bounds;
+endfig;
+\end{mplibcode}
+}
+\end{figure}
+
+In Abbildung ist der Verlauf von $B$ und $H$-Feld bei Anregung mit einem sinusförmigen Strom gezeigt -- die Sättigungscharakteristik rundet die Spitzen des Sinus deutlich ab, je mehr die Aussteuerung in die Sättigung geht, desto mehr nähert sich die zeitliche Form des $B$-Feldes einer Rechteckschwingung an.\\
+Da das Induktionsgesetz die induzierte Spannung mit der zeitlichen Ableitung der magnetischen Flussdichte verknüpft, wird deutlich, dass hier Probleme mit Überpannungen auftreten können -- die steilen Flanken im Verlauf des $B$-Feldes führen zu Spannungsspitzen, die die Isolation des induktiven Bauelements beschädigen können.\par
+Die Anregung mit Strömen tritt in der Praxis nur selten auf, weshalb dieses Problem nur in einigen Spezialfällen Probleme verursachen dürfte, ein Beispiel wären Stromwandler, die sehr große Wechselströme heruntertransformieren, um sie Messgeräten zuzuführen.
+\subsection{Spannungsanregung}
+Der weitaus üblichere Fall ist, dass der Kern näherungsweise von einer Spannungsquelle angeregt wird. Dies ist etwa der typische Fall in einem Transformator, bei dem der Magnetisierungsstrom in erster Näherung von der Primärspannung abhängt.
+\begin{figure}[h]
+\fcapside[\FBwidth]{\caption{Verlauf von $H$- und $B$-Feld bei sinusförmiger Spannungsanregung. Der typische Verlauf des Magnetisierungsverlauf wird deutlich -- kommt die Induktion in die Nähe der Sättigung, steigt das $H$-Feld und somit der Strom stark an.}\label{fig:voltage_hb}}{
+	
+\begin{mplibcode}
+input graph;
+beginfig(1);
+	lx := \mpdim{\textwidth}/2.2;
+	ly := 3cm;
+	pickup pencircle scaled 0.3bp;
+	ahlength := 1mm;
+	drawarrow (0,ly/2) -- (lx, ly/2);
+	drawarrow (lx/2,0) -- (lx/2, ly);
+	pickup pencircle scaled 0.5bp;
+	label.urt(textext("\footnotesize $H_\text{norm}$, $B_\text{norm}$"), (lx/2, ly));
+	label.lrt(textext("\footnotesize $t$"), (lx, ly/2));
+	draw begingraph(lx,ly);    gdraw "data/spannungsanregung/voltage_b.txt" dashed evenly;    gdraw "data/spannungsanregung/voltage_h.txt";
+	itick.lft(textext(""),0) withcolor white;
+	frame.llft withcolor white;
+	endgraph;
+	
+	picture legend;
+	legend = image(
+	label.rt(textext("\footnotesize H-Feld"), (0.7*lx, 0.3*ly));
+	label.rt(textext("\footnotesize B-Feld"), (0.7*lx, 0.15*ly));
+	draw (0.60*lx, 0.3*ly) -- (0.65*lx, 0.3*ly);
+	draw (0.60*lx, 0.15*ly) -- (0.65*lx, 0.15*ly) dashed evenly;
+	);
+	unfill bbox legend;
+	draw bbox legend withpen pencircle scaled 0.1bp;
+	draw legend;
+
+	path bounds;
+	bounds := (0, ypart llcorner currentpicture) -- lrcorner currentpicture -- urcorner currentpicture --(0, ypart ulcorner currentpicture) -- cycle;
+	setbounds currentpicture to bounds;
+endfig;
+\end{mplibcode}
+}
+\end{figure}
+
+\begin{figure}[h]
+\fcapside[\FBwidth]{\caption{Verlauf von Strom und Spannung bei sinusförmiger Spannungsanregung.}\label{fig:current_ui}}{
+	
+\begin{mplibcode}
+input graph;
+beginfig(1);
+	lx := \mpdim{\textwidth}/2.2;
+	ly := 3cm;
+	pickup pencircle scaled 0.3bp;
+	ahlength := 1mm;
+	drawarrow (0,ly/2) -- (lx, ly/2);
+	drawarrow (lx/2,0) -- (lx/2, ly);
+	pickup pencircle scaled 0.5bp;
+	label.urt(textext("\footnotesize $i_\text{norm}$, $u_\text{norm}$"), (lx/2, ly));
+	label.lrt(textext("\footnotesize $t$"), (lx, ly/2));
+	draw begingraph(lx,ly);    gdraw "data/spannungsanregung/voltage_u.txt" dashed evenly;    gdraw "data/spannungsanregung/voltage_h.txt";
+	itick.lft(textext(""),0) withcolor white;
+	frame.llft withcolor white;
+	endgraph;
+	
+	picture legend;
+	legend = image(
+	label.rt(textext("\footnotesize Strom"), (0.7*lx, 0.3*ly));
+	label.rt(textext("\footnotesize Spannung"), (0.7*lx, 0.15*ly));
+	draw (0.60*lx, 0.3*ly) -- (0.65*lx, 0.3*ly);
+	draw (0.60*lx, 0.15*ly) -- (0.65*lx, 0.15*ly) dashed evenly;
+	);
+	unfill bbox legend;
+	draw bbox legend withpen pencircle scaled 0.1bp;
+	draw legend;
+
+	path bounds;
+	bounds := (0, ypart llcorner currentpicture) -- lrcorner currentpicture -- urcorner currentpicture --(0, ypart ulcorner currentpicture) -- cycle;
+	setbounds currentpicture to bounds;
+endfig;
+\end{mplibcode}
+}
+\end{figure}
+Wie man in den Abbildungen oder auch den Hysteresekurven sieht, wächst der Strom für hohe Induktionen extrem stark an, die Sättigung tritt ein und verursacht enorm hohe Verluste in den Leitern. Daher muss dieser Zustand bei der Auslegung von induktiven Bauelementen im Allgemeinen unbedingt vermieden werden.
+
+\section{Parameteridentifikation}
+Wie am Anfang beschrieben wurde, ist das Ziel dieses Projektes einerseits, das Jiles-Atherton zu untersuchen, andererseits aber vor allem, eine neue Möglichkeit zu finden, um die Modellparameter aus Messdaten zu extrahieren.\\
+Der neue Ansatz ist hierbei, die Methoden des algorithmischen Differenzierens zu nutzen, um Jacobi- und Hesse-Matrix für Optimierungsalgorithmen bereitzustellen.
+\subsection{Least-Squares-Methode}
+Die Standardmethode um Modelle an Messdaten anzupassen, ist die Methode der kleinsten Fehlerquadrate:\\
+Man nimmt an, dass die beste Übereinstimmung von Modell und Messung gegeben ist, wenn die Summe der quadratischen Abweichungen minimal ist. Ist $f(\vec x, \vec p)$ die Modellfunktion, die von Eingangswerten $\vec x$ und Parametern $\vec p$ abhängt, so muss man das Minimum der Kostenfunktion
+\begin{equation}
+	\text{cost}(\vec p) = \sum_i \left(f(x_i, \vec p)-y_i\right)^2
+\end{equation}
+finden, um die beste Übereinstimmung des Modells mit den gemessenen Daten $\vec y$ zu erhalten.\\
+Die zu lösende mathematische Aufgabe ist also die Minimierung einer im Allgemeinen nichtlinearen und nicht konvexen Funktion. Für die Lösung dieser Problemstellung wurden diverse Algorithmen entworfen, die sich grob in zwei Klassen unterteilen lassen können: Ableitungsfreie Methoden und Methoden, die  Ableitungen -- zumindest die Erste -- der zu minimierenden Funktion benötigen.\\
+Im Allgemeinen sind Methoden, die Ableitungen nutzen, erfolgreicher, da sie für den nächsten Optimierungsschritt jeweils über Informationen verfügen, in welcher Richtung der Umgebung des aktuellen Schätzwertes die Kostenfunktion am steilsten abfällt. So kann insbesondere die Zahl der Funktionsauswertungen reduziert werden, was insbesondere dann relevant ist, wenn die Funktion rechnerisch teuer ist. Daher kommen gradientenfreie Verfahren üblicherweise erst dann zum Einsatz, wenn Gradientenverfahren nicht mehr einsetzbar sind -- dies ist dann der Fall, wenn Informationen über die Ableitungen nur schwer zu erhalten sind.
+\subsection{Probleme bei der Parameteridentifikation für das Jiles-Atherton-Modell}
+In der Literatur zum Jiles-Atherton-Modell finden sich viele Ansätze, um mittels gradientenfreier Verfahren auf die Parameter zu schließen. Bei fast all diesen Ansätzen gibt es jedoch ein entscheidendes Problem: Die Geometrie der Probe wird schlicht vernachlässigt -- während man dies bei toroidförmigen Kernen herausrechnen kann, führt es bei Kernen mit keiner derartig großen Symmetrie zu Fehlern. Dies wirkt sich insbesondere auf die Messung von Schichtblech- und Schnittbandkernen aus, da diese nicht toroidförmig erhältlich sind.\\
+Die Hysteresekurve wird in solchen Geometrien an verschiedenen Punkten im Material mit verschiedenen Phasenlagen und Amplituden durchlaufen, die messbaren Größen, Spannung und Strom, lassen somit nur einen Schluss auf die integrale und somit geometrieabhängige Hysteresekurve zu.\par
+Ziel dieser Arbeit ist es nun, die Geometrie in die Rechnung einzubeziehen. Dazu muss das Jiles-Atherton-Modell in eine orts- und zeitaufgelöste Simulation integriert werden (vgl. \cite{sadowski}, \cite{Bergqvist}), anschließend müssen Strom und Spannung aus dem Modell gewonnen und mit den Messdaten in die Kostenfunktion überführt werden.\\
+Offensichtlich ist nun die ursprünglich numerisch wenig aufwändige Funktionsauswertung des Vorwärtsmodells um Größenordnungen teurer geworden. Ein gradientenfreies Verfahren, welches eine kleinere Konvergenzrate hat, dafür aber keine Gradienten berechnen muss, kommt nun nicht mehr infrage -- die Zahl der Funktionsauswertungen ist um Größenordnungen größer als bei Gradientenverfahren.\par
+Um das Ziel der Parameteridentifikation unter Beachtung der Geometrie zu ermöglichen, muss also eine Möglichkeit gefunden werden, die Ableitung(en) der Kostenfunktion zu bestimmen. Dafür gibt es drei Möglichkeiten:
+\begin{itemize}
+	\item Symbolische Berechnung
+	\item Numerische Berechnung (Differenzenquotienten)
+	\item Automatisches Differenzieren
+\end{itemize}
+Um die Ableitungen symbolisch zu bestimmen, müssten die relativ komplizierten Gleichungen einzeln differenziert und die jeweiligen Funktionen ebenfalls in den Programmcode geschrieben werden. Dies stellt gerade bei großer Parameterzahl einen enormen Entwicklungsaufwand dar, ist fehleranfällig und meist relativ ineffizient.\\
+Die Effizienz ist bei der Berechnung mittels Differenzenquotienten kein Problem -- sie ist hier besonders hoch. Im Kontrast dazu ist jedoch die Genauigkeit sehr klein: Ist die Schrittweite sehr klein, liegen die zwei Funktionswerte eines Quotienten sehr nah beieinander -- dies kann z.B. dazu führen, dass sich zwei Zahlen, die jeweils \SI{32}{\Bit} breit sind, nur in den letzten 5 Stellen unterscheiden. Ein enormer Genauigkeitsverlust ist die Folge.\par
+Einen Mittelweg zwischen Geschwindigkeit und Genauigkeit bietet die dritte Methode, das automatische Differenzieren.
+\section{Automatisches Differenzieren}
+Die Grundidee des automatischen Differenzierens ist relativ simpel: Die Ableitung einer gegebenen Funktion wird mithilfe der Kettenregel so lange umgeformt, bis nur noch Basisfunktionen vorkommen, für die die Ableitung hinterlegt ist.\\
+Man unterscheidet zwischen zwei grundlegenden Vorgehensweisen, \emph{Forward-} und dem \emph{Reverse-Mode}.
+\subsection{Forward Mode}
+Betrachten wir die Funktion 
+\begin{equation}
+f(x_1, x_2) = \frac{\sin(x_1/x_2)}{\exp(x_1/x_2)}. \label{eq:example_func}
+\end{equation}
+Im \emph{Forward-Mode} wertet man die Funktion nun genauso aus wie sonst -- bezüglich der Klammern von innen nach außen. Dabei notiert man jedoch auch neben der Funktion stets die Ableitungen der einzelnen Ausdrücke. Soll beispielsweise die Ableitung nach $x_2$ im Punkt $(1,2)$ ermittelt werden:
+\begin{equation*}
+\begin{aligned}
+	x_1 &&= 1\\
+	\dot{x}_1 &&= 0\\[0.3cm]
+	x_2 &&= 2\\
+	\dot{x}_2 &&= 1\\[0.3cm]
+	v_1 &= x_1/x_2 &= \num{0,5} \\
+	\dot{v}_1 &= \tfrac{\partial v_1}{\partial x_1}\dot{x}_1 + \tfrac{\partial v_1}{\partial x_2}\dot{x}_2 = \tfrac{1}{x_2}\dot{x}_1 - \tfrac{x_1}{x_2^2}\dot{x}_2 = \tfrac{1}{2}0 - \tfrac{1}{2^2}1 &= \num{-0,25}\\[0.3cm]
+	v_2 &= \sin(v_1) = \sin(1/2) &= \num{0.479425539}\\
+	\dot{v}_2 &= \tfrac{\partial v_2}{\partial v_1}\dot{v}_1 = \cos(v_1)\dot v_1 = \cos(\num{0,5})(-\num{0,25}) &= \num{0.219395640}\\[0.3cm]
+	v_3 &= \exp(v_1) &= \num{1.648721271}\\
+	\dot v_3 &= \tfrac{\partial v_3}{\partial v_1}\dot v_1 = \exp(v_1)\dot v_1 &= \num{-0.412180317} \\[0.3cm]
+	v_4 &= \tfrac{v_2}{v_3} &= \num{0.290786288} \\
+	\dot v_4 &= \tfrac{\partial v_4}{\partial v_2} \dot v_2 + \tfrac{\partial v_4}{\partial v_3}\dot v_3 = \tfrac{1}{v_3}\dot v_2 - \tfrac{v_2}{v_3^2}\dot v_3 &= \num{-0.060373610}
+\end{aligned}
+\end{equation*}
+Wie man sieht, tritt durch das Differenzieren kein Signifikanzverlust auf, wie bei der Verwendung von Differenzenquotienten. Weiterhin ist der Algorithmus relativ einfach und somit nicht viel langsamer als die Berechnung der Ableitungen mit Differenzenquotienten. Das algorithmische Differenzieren schafft also den oben genannten Mittelweg zwischen symbolischer Differentiation und numerischer Differentiation, den Mittelweg zwischen Genauigkeit und Geschwindigkeit.\par
+Der dargestellte Algorithmus weist jedoch im Fall großer Parameterzahlen einen Nachteil auf: Bei jedem Zwischenschritt muss sowohl die Funktionsauswertung selbst, als auch die Ableitung nach jedem Parameter gespeichert werden. Bei großen Parameterzahlen wird der Algorithmus viel Speicher und Rechenleistung brauchen, die Rechenzeit skaliert mit der Parameterzahl.
+\subsection{Reverse Mode}
+Einen Ausweg aus diesem Problem bietet der zweite Basisalgorithmus des automatischen Differenzierens, der \emph{Reverse Mode}. Bei diesem steigt der Aufwand für Ableitungen nach zusätzlichen Parametern nicht an, wie das folgende Beispiel deutlich macht. Als Funktion wird wieder die aus Gleichung \ref{eq:example_func} betrachtet. Wie der Namer \emph{Reverse Mode} sagt, wird der Informationsfluss für die Gradientenbildung rückwärts durchschritten. Damit dies möglich ist, muss also die Funktion vorher einmal in Vorwärtsrichtung ausgeführt und alle Zwischenwerte aufgenommen worden sein. Es gilt also:
+\begin{equation*}
+	\begin{aligned}
+		x_1 &= 1 \\
+		x_2 &= 2 \\
+		v_1 &= \num{0,5} \\
+		v_2 &= \num{0.479425539}\\
+		v_3 &= \num{1.648721271}\\
+		f = v_4 &= \num{0.290786288}\\[0.4cm]
+		
+		\dif f &= \frac{\partial f}{\partial v_2} \dif v_2 +  \frac{\partial f}{\partial v_3} \dif v_3 \\
+		\dif v_2 &= \frac{\partial v_2}{\partial v_1} \dif v_1 = \cos(v_1) \dif v_1 \\
+		\dif v_3 &= \frac{\partial v_3}{\partial v_1} \dif v_1 = \exp(v_1) \dif v_1 \\
+		\dif v_1 &= \frac{\partial v_1}{\partial x_1} \dif x_1 + \frac{\partial v_1}{\partial x_2} \dif x_2 = \frac{1}{x_2} \dif x_1 - \frac{x_1}{x_2^2} \dif x_2
+	\end{aligned}
+\end{equation*}
+Zusammengefasst folgt
+\begin{equation}
+	\dif f = \frac{1}{v_3}\cos(v_1)\left(\frac{1}{x_2} \dif x_1 - \frac{x_1}{x_2^2}\right) - \frac{v_2}{v_3^2}\exp(v_1)\left(\frac{1}{x_2}\dif x_1 - \frac{x_1}{x_2^2}\dif x_2\right).
+\end{equation}
+Wie man sieht, erhält man sofort die Ableitungen nach den beiden Parametern:
+\begin{equation}
+	\frac{\dif f}{\dif x_1} = \frac{1}{v_3}\cos(v_1)\frac{1}{x_2} - \frac{v_2}{v_3^2}\exp(v_1)\frac{1}{x^2}
+\end{equation}
+und
+\begin{equation}
+	\frac{\dif f}{\dif x_2} = \frac{1}{v_3}\cos(v_1)\left(-\frac{x_1}{x_2^2}\right) - \frac{x_2}{v_3^2}\exp(v_1)\left(\frac{x_1}{x_2^2}\right)
+\end{equation}
 \newpage
 \printbibliography
 \end{document}
