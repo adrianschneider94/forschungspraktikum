@@ -1,0 +1,78 @@
+
+\begin{tikzpicture}[>=latex',line join=bevel,]
+  \pgfsetlinewidth{1bp}
+%%
+\pgfsetcolor{black}
+  % Edge: x1 -> div
+  \draw [->] (34.635bp,304.76bp) .. controls (39.569bp,292.97bp) and (46.079bp,277.42bp)  .. (55.623bp,254.62bp);
+  \definecolor{strokecol}{rgb}{0.0,0.0,0.0};
+  \pgfsetstrokecolor{strokecol}
+  \draw (48.0bp,276.8bp) node[right] {x};
+  \draw (55.0bp,276.8bp) node[right] {1};
+  % Edge: sin -> div2
+  \draw [->] (36.295bp,146.7bp) .. controls (40.479bp,137.97bp) and (45.645bp,127.2bp)  .. (54.765bp,108.18bp);
+  % Edge: div -> sin
+  \draw [->] (54.705bp,219.7bp) .. controls (50.521bp,210.97bp) and (45.355bp,200.2bp)  .. (36.235bp,181.18bp);
+  % Edge: div -> exp
+  \draw [->] (71.768bp,219.7bp) .. controls (76.238bp,210.88bp) and (81.767bp,199.97bp)  .. (91.294bp,181.18bp);
+  % Edge: x2 -> div
+  \draw [->] (91.365bp,304.76bp) .. controls (86.431bp,292.97bp) and (79.921bp,277.42bp)  .. (70.377bp,254.62bp);
+  % Edge: div2 -> result
+  \draw [->] (63.0bp,72.955bp) .. controls (63.0bp,64.883bp) and (63.0bp,55.176bp)  .. (63.0bp,36.09bp);
+  % Edge: exp -> div2
+  \draw [->] (91.232bp,146.7bp) .. controls (86.762bp,137.88bp) and (81.233bp,126.97bp)  .. (71.706bp,108.18bp);
+  % Node: div2
+\begin{scope}
+  \definecolor{strokecol}{rgb}{0.0,0.0,0.0};
+  \pgfsetstrokecolor{strokecol}
+  \draw (63.0bp,91.0bp) ellipse (27.0bp and 18.0bp);
+  \draw (63.0bp,91.0bp) node {div};
+\end{scope}
+  % Node: result
+\begin{scope}
+  \definecolor{strokecol}{rgb}{0.0,0.0,0.0};
+  \pgfsetstrokecolor{strokecol}
+  \draw (90.0bp,36.0bp) -- (36.0bp,36.0bp) -- (36.0bp,0.0bp) -- (90.0bp,0.0bp) -- cycle;
+  \draw (63.0bp,18.0bp) node {result};
+\end{scope}
+  % Node: exp
+\begin{scope}
+  \definecolor{strokecol}{rgb}{0.0,0.0,0.0};
+  \pgfsetstrokecolor{strokecol}
+  \draw (100.0bp,164.0bp) ellipse (27.0bp and 18.0bp);
+  \draw (100.0bp,164.0bp) node {exp};
+\end{scope}
+  % Node: x2
+\begin{scope}
+  \definecolor{strokecol}{rgb}{0.0,0.0,0.0};
+  \pgfsetstrokecolor{strokecol}
+  \draw (126.0bp,341.0bp) -- (72.0bp,341.0bp) -- (72.0bp,305.0bp) -- (126.0bp,305.0bp) -- cycle;
+  \draw (88.5bp,319.8bp) node[right] {x};
+  \draw (95.5bp,319.8bp) node[right] { 2};
+\end{scope}
+  % Node: div
+\begin{scope}
+  \definecolor{strokecol}{rgb}{0.0,0.0,0.0};
+  \pgfsetstrokecolor{strokecol}
+  \draw (63.0bp,237.0bp) ellipse (27.0bp and 18.0bp);
+  \draw (63.0bp,237.0bp) node {div};
+\end{scope}
+  % Node: x1
+\begin{scope}
+  \definecolor{strokecol}{rgb}{0.0,0.0,0.0};
+  \pgfsetstrokecolor{strokecol}
+  \draw (54.0bp,341.0bp) -- (0.0bp,341.0bp) -- (0.0bp,305.0bp) -- (54.0bp,305.0bp) -- cycle;
+  \draw (16.5bp,319.8bp) node[right] {x};
+  \draw (23.5bp,319.8bp) node[right] { 1};
+\end{scope}
+  % Node: sin
+\begin{scope}
+  \definecolor{strokecol}{rgb}{0.0,0.0,0.0};
+  \pgfsetstrokecolor{strokecol}
+  \draw (28.0bp,164.0bp) ellipse (27.0bp and 18.0bp);
+  \draw (28.0bp,164.0bp) node {sin};
+\end{scope}
+%
+\end{tikzpicture}
+
+

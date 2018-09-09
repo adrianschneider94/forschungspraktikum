@@ -1,0 +1,23 @@
+digraph vorgehen {
+	node[shape=box, fontsize=10];
+	equations [shape=box, label="Gleichungen des\nJiles-Atherton-Modell"];
+	d_quotients [shape=box, label="Differentialquotienten"];
+	integration [shape=box, label="Numerische Integration:\nRunge-Kutta-Methoden"];
+	forward [shape=ellipse, label="Vorwartsmodell:\n Erzeugung von Hysteresekurven"];
+	data [shape=box, label="Messdaten"];
+	cost [shape=box, label="Kostenfunktion"];
+	ad [shape=box, label="Automatisches\nDifferenzieren"];
+	grad [shape=box, label="Gradient der\nKostenfunktion"];
+	opt [shape=box, label="Minimierungsalgorithmus"];
+	scalar [label="Parameteridentifikation\nim skalaren Fall"];
+
+	equations -> d_quotients;
+	d_quotients -> forward;
+	integration -> forward;
+	forward -> cost;
+	data -> cost;
+	cost -> grad;
+	ad -> grad;
+	grad -> scalar;
+	opt -> scalar;
+}

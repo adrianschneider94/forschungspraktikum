@@ -1,0 +1,17 @@
+digraph abc {
+rankdir=TD;
+x1 [shape=box, label=<$x_1$>];
+x2 [shape=box, label=<$x_2$>];
+div [label=<div>];
+div2 [label=<div>];
+result [shape=box];
+
+x1 -> div [label=<$x_1$>];
+x2 -> div [label=<$x_2$>];
+div -> sin [label=<$v_1$>];
+div -> exp [label=<$v_1$>];
+sin -> div2 [label=<$v_2$>];
+exp -> div2 [label=<$v_3$>];
+div2 -> result [label=<$v_4$>];
+
+}

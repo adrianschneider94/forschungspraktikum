@@ -1,0 +1,27 @@
+\begin{figure}[t]
+\fcapside[\FBwidth]{
+	\caption{
+	Darstellung der Beispielfunktion aus Gleichung \ref{eq:example_func} als Rechengraph (\emph{computational graph}). Es gilt $v_1 = x_1 / x_2$, $v_2 = \sin(v_1)$, $v_3 = \exp(v_1)$ und $v_4 = v_2/v_3$.
+	}
+	\label{fig:computational_graph}
+}{
+\begin{tikzpicture}[line join=bevel,scale=0.5]
+%%
+\node (div2) at (63.0bp,104.0bp) [draw,ellipse] {div};
+  \node (result) at (63.0bp,18.0bp) [draw,rectangle] {result};
+  \node (exp) at (99.0bp,190.0bp) [draw,ellipse] {exp};
+  \node (x2) at (99.0bp,362.0bp) [draw,rectangle] {$x_2$};
+  \node (div) at (63.0bp,276.0bp) [draw,ellipse] {div};
+  \node (x1) at (27.0bp,362.0bp) [draw,rectangle] {$x_1$};
+  \node (sin) at (27.0bp,190.0bp) [draw,ellipse] {sin};
+  \draw [->] (x1) -- (div) node [midway, left] {$x_1$};
+  \draw [->] (sin) -- (div2) node [midway, left] {$v_2$};
+  \draw [->] (div) -- (sin) node [midway, left] {$v_1$};
+  \draw [->] (div) -- (exp) node [midway, right] {$v_1$};
+  \draw [->] (x2) -- (div) node [midway, right] {$x_2$};
+  \draw [->] (div2) -- (result) node [midway, right] {$v_4$};
+  \draw [->] (exp) -- (div2) node [midway, right] {$v_3$};
+%
+\end{tikzpicture}
+}
+\end{figure}

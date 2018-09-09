@@ -1,0 +1,33 @@
+digraph vorgehen_ort {
+	graph [rankdir=TD];
+	node [shape=box];
+	
+	fem [label="Methode der\nfiniten Elemente"];
+	maxwell [label="Maxwell-Gleichungen\nmit inhomogener\nPermeabilität"];
+	geometry [label="Geometrie"];
+	meshing [label="Meshing"];
+	problem [shape=ellipse, label="Ortsaufgelöstes\nProblem"];
+	ja [label="Jiles-Atherton-\nModell"];
+	rk [label="Runge-Kutta-Integration"];
+	ort_zeit [label="Orts- und zeitaufgelöstes\nVorärts-Modell"];
+	data [label="Messdaten"];
+	cost [label="Kostenfunktional"];
+	adjoint_methods [label="Adjungierte Methoden\n(abstrahiertes\nautomatisches Differenzieren)"];
+	adjoint [label="Adjungierter Operator\ndes Kostenfunktionals"];
+	opt [label="Optimierungs-\nalgorithmus"];
+	identification [shape=ellipse, label="Parameter-\nidentifikation"];
+	
+	fem -> problem;
+	maxwell -> problem;
+	geometry -> meshing;
+	meshing -> problem;
+	problem -> ort_zeit;
+	ja -> ort_zeit;
+	rk -> ort_zeit;
+	ort_zeit -> cost;
+	data -> cost;
+	adjoint_methods -> adjoint;
+	cost -> adjoint;
+	adjoint -> identification;
+	opt -> identification;
+}
