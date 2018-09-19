@@ -21,4 +21,5 @@ cdef extern from "jiles_atherton.h" namespace "jiles_atherton":
         void calculate(vector[double])
         double get_cost(vector[double])
         vector[double] get_gradient(vector[double])
+        vector[double] get_hessian(vector[double])
 

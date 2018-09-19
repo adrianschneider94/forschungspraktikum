@@ -36,6 +36,14 @@ RUN apt-get -qq update && apt-get -qq -y install curl bzip2 \
 # Install Python packages
 RUN conda install -y numpy scipy jupyter matplotlib nose
 
-# Install PyCppAD
+# Install Cython
+RUN pip install cython
 
-ENTRYPOINT /bin/bash
+RUN cd /home/ && git clone https://github.com/adrianschneider94/forschungspraktikum.git && cd forschungspraktikum && pip install .
+
+VOLUME /home/
+EXPOSE 8888
+WORKDIR /home/
+
+ENTRYPOINT jupyter notebook --ip 0.0.0.0 --no-browser --allow-root
+

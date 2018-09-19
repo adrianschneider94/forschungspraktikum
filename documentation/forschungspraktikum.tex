@@ -9,7 +9,7 @@
     headings=standardclasses,
     headings=small,
     twoside=on,
-    BCOR=1cm
+    BCOR=1cm 
   }
   
 \usepackage{adrianschneider}
@@ -25,7 +25,7 @@
   
 \addbibresource{theory.bib}
 \begin{document}
-
+\title{Parameteridentifikation beim Jiles-Atherton-Modell für die Beschreibung der magnetische Hysterese}
 \tableofcontents
 \newpage
 \section{Einleitung}
@@ -34,38 +34,40 @@ Ziel des Projektes ist es, die Kernverluste in induktiven Bauelementen besser vo
 \subsection{Hysteresemodelle}
 Um hier eine Verbesserung erzielen zu können, ist es notwendig, die Hysterese transient zu beschreiben und mit diesem Modell die Verluste zu berechnen. Die Wissenschaft hat hierfür einige Modelle hervorgebracht:
 \begin{labeling}{Krasnosel’skii–Pokrovskii}
-	\item[Komplexe Permeabilität]{}
-	\item[Jiles-Atherton]{}
-	\item[Preisach]{}
-	\item[Coleman-Hodgdon]{}
-	\item[Krasnosel’skii–Pokrovskii]{}
-	\item[Maxwell-Slip]{}
-	\item[Bouc–Wen]{}
-	\item[Duhem]{}
-	\item[VINCH]{}
+	\item[Komplexe Permeabilität]{Lineares Modell: Der Realteil der Permeabilität beschreibt die „normale” Permeabilität, der Imaginärteil stellt die Kernverluste dar.}
+	\item[Jiles-Atherton \cite{ja}]{Weit verbreitetes, physikalisch motiviertes Modell, das die Hysteresekurve mit fünf Parametern beschreibt. Trotz der physikalischen Grundlage eher phänomenologisch, lässt unphysikalische Hysteresekurven zu.}
+	\item[Preisach \cite{preisach}]{Mathematisches Modell: Eine Hysteresekurve wird in eine Summe von \emph{Hysteronen} entwickelt -- Stufenfunktionen mit Hysterese.}
+	\item[Coleman-Hodgdon]{Nichtlineare, differentielle Formulierung, enthält zwei Funktionen, die den Charakter der Hysterese bestimmen.}
+	\item[Maxwell-Slip]{Modell für Reibung, jedoch auch auf andere Hystereseprozesse übertragbar}
+	\item[VINCH \cite{vinch}]{Thermodynamisch begründetes Modell mit einer beliebigen Anzahl von internen Modellvariablen. Reproduziert \emph{minor loops} relativ gut.}
 \end{labeling}
-Die verschiednen Modelle unterscheiden sich insbesondere in der Anzahl der Modellparameter. Während das Jiles-Atherton mit fünf Parametern auskommt, können etwa im Preisach- oder VINCH-Modell beliebig viele Parameter eingeführt werden -- dies führt dazu, dass gemessene Hysteresekurven genauer angenähert werden können, jedoch vermutlich die Allgemeingültigkeit ein Stück weit verloren geht.\\
-Ein entscheidendes Problem bei fast allen erwähnten Modellen ist die Parameteridentifikation -- die Modellparameter müssen an Messkurven angeglichen werden. Bei dem Modell der komplexen Permeabilität fällt dies noch recht leicht, da hier einer einfachen Leistungsmessung ausreicht (noch dazu ist das Modell linear). Für die anderen Modelle, die alle nichtlinear sind, gestaltet sich dies jedoch deutlich schwieriger.
+Die verschiedenen Modelle unterscheiden sich insbesondere in der Anzahl der Modellparameter. Während das Jiles-Atherton-Modell mit fünf Parametern auskommt, können etwa im Preisach- oder VINCH-Modell beliebig viele Parameter eingeführt werden -- dies führt dazu, dass gemessene Hysteresekurven genauer angenähert werden können, jedoch der Modellcharakter verloren geht.\\
+Ein entscheidendes Problem bei fast allen erwähnten Modellen ist die Parameteridentifikation -- die Modellparameter müssen an Messkurven angeglichen werden. Bei dem Modell der komplexen Permeabilität fällt dies noch recht leicht, da hier eine einfache Leistungsmessung ausreicht (noch dazu ist das Modell linear). Für die anderen Modelle, die alle nichtlinear sind, gestaltet sich dies jedoch deutlich schwieriger.
 \subsection{Parameteridentifikation}
-Das übliche Vorgehen ist, eine Kostenfunktion aufzustellen, die ihr Minimum dann annimmt, wenn Messdaten und Simulationsdaten am besten übereinstimmen. Diese Kostenfunktion muss anschließend mit einem geeigneten Algorithmus minimiert werden. Für nichtlineare Modelle wie die vorliegenden gestaltet sich dies jedoch oft sehr schwierig -- die meisten Algorithmen benötigen für eine schnelle Konvergenz die Jacobi- oder sogar auch die Hesse-Matrix der zu minimierenden Kostenfunktion. Diese sind analytisch jedoch nicht zugänglich. Ein alternativer Ansatz ist, gradientenfreie Algorithmen zu verwenden (genetische Algorithmen, linear Programming etc.). Dies wurde in der Literatur auch wiederholt vorgenommen -- die Konvergenz kann hierbei jedoch nicht garantiert werden, noch dazu sind diese Algorithmen recht langsam.
+Das übliche Vorgehen ist, eine Kostenfunktion aufzustellen, die ihr Minimum dann annimmt, wenn Messdaten und Simulationsdaten am besten übereinstimmen. Diese Kostenfunktion muss anschließend mit einem geeigneten Algorithmus minimiert werden. Für nichtlineare Modelle wie die vorliegenden gestaltet sich dies jedoch oft sehr schwierig -- die meisten Algorithmen benötigen für eine schnelle Konvergenz die Jacobi- oder sogar auch die Hesse-Matrix der zu minimierenden Kostenfunktion. Diese sind analytisch jedoch nicht, bzw. nur mit exorbitantem Aufwand zugänglich. Ein alternativer Ansatz ist, gradientenfreie Algorithmen zu verwenden (genetische Algorithmen, linear Programming etc.). Dies wurde in der Literatur auch wiederholt vorgenommen -- die Konvergenz kann hierbei jedoch nicht garantiert werden, noch dazu sind diese Algorithmen recht langsam.
 \subsection{Automatisches Differenzieren}
 Ein Ausweg aus diesen Problemen versprechen die neuen Möglichkeiten aus dem Gebiet des automatischen Differenzierens. Durch die stetige Erhöhung der Rechenleistung von Computern und die neuen Anwendungsmöglichkeiten im Bereich der künstlichen Intelligenz konnten hier in den letzten Jahren viele Verbesserungen erreicht werden.\\
-Mit dem automatischen Differenzieren ist es möglich, Computerprogramme abzuleiten, also Jacobi-, Hessematrix etc. für Programmme zu bestimmen. Die Idee hinter diesem Projekt ist es nun, die Fortschritte in diesem Bereich zu nutzen und auf das dargestellte Problem der Parameteridentifikation von Hysteresemodellen anzuwenden.
+Mit dem automatischen Differenzieren ist es möglich, Computerprogramme abzuleiten, also Jacobi-, Hessematrix etc. für Programme zu bestimmen. Die Idee hinter diesem Projekt ist es nun, die Fortschritte in diesem Bereich zu nutzen und auf das dargestellte Problem der Parameteridentifikation von Hysteresemodellen anzuwenden.
 \subsection{Vorgehen}
 \begin{figure}
-\caption{Vorgehen zur Parameteridentifikation iim Fall ohne Ortsauflösung.\\Ausgangspunkt sind die konstituierenden Gleichungen des Jiles-Atherton-Modells, aus denen man die Differentialquotienten gewinnen kann, die man für die numerische Integration benötigt.\\
+\caption{Vorgehen zur Parameteridentifikation im Fall ohne Ortsauflösung.\\Ausgangspunkt sind die konstituierenden Gleichungen des Jiles-Atherton-Modells, aus denen man die Differentialquotienten gewinnen kann, die man für die numerische Integration benötigt.\\
 Mit dieser können Hysteresekurven zu gegebenen Parametern erzeugt werden. Die Differenz von erzeugten Hysteresekurven und den Messdaten führen zur Kostenfunktion, die mit der Methode des automatischen Differenzierens nach den Parametern abgeleitet werden kann.\\
-Mit einem Minimierungsalgorithmus kann man das Optimierungsproblem lösen und so die Parameter identifizieren.}
+Mit einem Minimierungsalgorithmus kann man nun das Optimierungsproblem lösen und so die Parameter identifizieren.}
 \label{fig:vorgehen_skalar}
 
 \includegraphics[width=\textwidth]{vorgehen.pdf}
 
 \end{figure}
-In Abbildung \ref{fig:vorgehen_skalar} wird das Vorgehen schematisch dargestellt, zumindest der erste Teil es Projektes, die Lösung der Aufgabe im nicht-ortsaufgelösten Fall. Der Projektplan für den zweiten Teil ist im Anhang, Abbildung \ref{fig:vorgehen_ort} bildlich dargestellt.\\
-Als Beispielmodell wird das Jiles-Atherton-Modell verwendet, da es relativ populär ist und somit viele Erfahrungswerte in der wissenschaftlichen Literatur vorhanden sind. Außerdem hat es eine recht kleine Parameteranzahl, was einige Vereinfachungen mit sich bringt. Dieses Modell wird in Abschnitt \ref{sec:jiles-atherton} genauer dargestellt.\\
+In Abbildung \ref{fig:vorgehen_skalar} wird das Vorgehen schematisch dargestellt, zumindest der erste Teil es Projektes, die Lösung der Aufgabe im nicht-ortsaufgelösten Fall. Der Projektplan für den zweiten Teil ist im Ausblick, Abbildung \ref{fig:vorgehen_ort} bildlich dargestellt. Auf die verschiedenen Bestandteile soll nun im Folgenden eingegangen werden.\\
+\paragraph{Jiles-Atherton-Modell $\,\rightarrow\,$ Differentialquotienten}
+Als Beispielmodell wird das Jiles-Atherton-Modell verwendet, da es relativ populär ist und somit viele Erfahrungswerte in der wissenschaftlichen Literatur vorhanden sind. Außerdem hat es eine recht kleine Parameteranzahl, was einige Vereinfachungen mit sich bringt. Das Modell wird in Abschnitt \ref{sec:jiles-atherton} genauer dargestellt.\\
+Die Methodik, mit der die Parameter im Rahmen dieses Projektes ermittelt werden, lässt sich jedoch problemlos auf andere Hysteresemodelle übertragen. Man muss dafür natürlich die Algorithmen neu implementieren, das Grundkonzept bleibt jedoch das gleiche.
 \paragraph{Skalares Vorwärtsmodell} Der nächste Schritt ist, das Vorwärtsmodell für den skalaren Fall (keine Ortsauflösung von Feld und Hysterese) zu entwerfen. Dieses Vorwärtsmodell ist effektiv eine Abbildung vom Parameterraum in die Menge der Hysteresekurven -- für jede Parameterkombination erhält man eine (zeitlich diskretisierte) B-H-Kurve.
-\paragraph{Integration} Dies wird durch die Integration der differentiellen Magnetisierung, die das Jiles-Atherton-Modell beschreibt, erreicht. Da die verfügbaren AD-Tools nicht mit den  integrierten Algorithmen der üblichen Mathematik-Pakete umgehen können, muss diese Integration manuell implementiert werden. Als Algorithmus wird ein Runge-Kutta-Verfahren gewählt, welches in einem Fachartikel als geeignet für das Jiles-Atherton-Modell beschrieben wurde. Eine kurze Übersicht zum Thema der numerischen Integration und den Runge-Kutta-Verfahren ist in Abschnitt \ref{sec:numeric-integration} gegeben.
-\paragraph{Inverses Problem} Der nächste Schritt ist der Entwurf des inversen Problems: Gesucht ist nun das Urbild einer Hysteresekurve (Messung) im Parameterraum. Dazu wird zuerst eine Kostenfunktion aufgestellt, von der anschließend mit den Methoden des automatischen Differenzierens Jacobi- und Hessematrix ermittelt werden. Daraufhin wird die Kostenfunktion mit einem geeigneten Algorithmus minimiert. Dadurch erhält man die optimierten Parameter zur gegebenen Messkurve.\\
+\paragraph{Integration} Dies wird durch die Integration der differentiellen Magnetisierung, die das Jiles-Atherton-Modell beschreibt, erreicht. Da die verfügbaren AD-Werkzeuge nicht mit den integrierten Algorithmen der üblichen Mathematik-Pakete umgehen können, muss diese Integration manuell implementiert werden. Als Algorithmus wird ein Runge-Kutta-Verfahren gewählt, welches in einem Fachartikel \cite{ja-rk} als geeignet für das Jiles-Atherton-Modell beschrieben wurde. Eine kurze Übersicht zum Thema der numerischen Integration und den Runge-Kutta-Verfahren ist in Abschnitt \ref{sec:numeric-integration} gegeben.
+\paragraph{Messdaten, Kostenfunktion} Aus der quadratischen Abweichung zwischen modellierten und gemessen Hysteresekurven kann man nun die Kostenfunktion für das Minimierungsproblem aufstellen. Im Rahmen dieses Projektes wird nicht auf tatsächliche Messdaten zurückgegriffen, sondern auf simulierte. Diese kann man leicht erzeugen und z.B. mit Rauschen etc. versehen, um den Algorithmus zu testen.
+\paragraph{Inverses Problem: Automatisches Differenzieren, Parameteridentifikation} Der nächste Schritt ist der Entwurf des inversen Problems: Gesucht ist nun das Urbild einer Hysteresekurve (Messung) im Parameterraum. Dazu wird zuerst eine Kostenfunktion aufgestellt, von der anschließend mit den Methoden des automatischen Differenzierens Jacobi- und Hessematrix ermittelt werden. Daraufhin wird die Kostenfunktion mit einem geeigneten Algorithmus minimiert. Dadurch erhält man die optimierten Parameter zur gegebenen Messkurve.\\
+Mit diesem ersten Teil kann ein \emph{proof-of-concept} erreicht werden. Man kann überprüfen, ob das automatische Differenzieren und somit das Gewinnen von Ableitungen der Kostenfunktion für den Optimierungsalgorithmus gelingt und ob die Zahl der Funktionsaufrufe dadurch tatsächlich im Vergleich zu einem gradientenfreien Verfahren fällt.\\
+Im nächsten Schritt sollen dann die Methoden und Prinzipen auf das ortsaufgelöste Modell übertragen werden:
 \paragraph{Ortsaufgelöstes Vorwärtsmodell}
 Die bisherigen Berechnungen galten stets für ein skalares Modell, der Kern wurde also betrachtet als würde in jedem Punkt das gleiche Feld herrschen. Dies ist jedoch natürlich nur eine Näherung. Daher soll im nächsten Schritt das Jiles-Atherton-Modell auf einen ausgedehnten Kern übertragen werden. Die Zeitdiskretisierung wird genauso wie vorher mit finiten Differenzen (Runge-Kutta-Methode) vorgenommen, die Ortsdiskretisierung basiert auf der Finite-Elemente-Methode. Mit dem ortsaufgelösten Vorwärtsmodell kann nun die Hysterese im gesamten Kern ortsaufgelöst und unter Berücksichtigung der Maxwell-Gleichungen modelliert werden.
 \paragraph{Inverses ortsaufgelöstes Problem}
@@ -76,7 +78,7 @@ Das Jiles-Atherton-Modell ist ein physikalisch motiviertes Modell zur Beschreibu
 \subsection{Konstituierende Gleichungen}
 \begin{align}
 	\He &= H + \alpha M \quad &&\text{Effektives Feld} \label{eq:h_eff}\\
-	\Man &= \Msat \Langevin\left(\frac{\He}{a}\right) \quad &&\text{Anhysterische Magnetisierung}  \label{eq:m_an}\\
+	\Man &= \Msat \Langevin\left(\frac{\He}{a}\right) \quad &&\text{Anhysteretische Magnetisierung}  \label{eq:m_an}\\
 	\frac{\dif\Mirr}{\dif \He} &= \frac{\Man - \Mirr}{k \sign\left(\frac{\dif H}{\dif t}\right)} \quad &&\text{Pinning} \label{eq:pinning}\\
 	M &= \Mrev + \Mirr \quad &&\text{Gesamte Magnetisierung} \label{eq:m_gesamt}\\
 	\Mrev &= c(\Man - \Mirr) \quad &&\text{Irreversible Magnetisierung} \label{eq:m_rev}
@@ -89,7 +91,7 @@ In diesen fünf Modellgleichungen kommen fünf Modellparameter vor:
 	\item[$k$]{Pinning-Energie}
 	\item[$c$]{Magnetisierungsreversibilität}
 \end{labeling}
-Die Funktion $\Langevin(x)$ ist die sogenannte Langevin-Funktion, die die anhysterische Magnetisierungskurve beschreibt. Sie ist definiert durch
+Die Funktion $\Langevin(x)$ ist die sogenannte Langevin-Funktion, die die anhysteretische Magnetisierungskurve beschreibt. Sie ist definiert durch
 \begin{equation}
 	\Langevin(x) = \coth(x) - \frac{1}{x}
 \end{equation}
@@ -157,7 +159,7 @@ Die Differentiale sind, wenn man alle Terme ausschreibt, abhängig von $B$, $H$,
 \end{equation}
 \section{Numerische Integration}
 \label{sec:numeric-integration}
-Das Jiles-Atherton-Modell beschreibt -- wie oben gezeigt -- nur einen differentiellen Zusammenhang. Um Aussagen über den zeitlichen Verlauf der Magnetisierung und somit über die Kernverluste zu gewinnen, muss die jeweilige gewöhnliche Differentialgleichung integriert werden, zum Beispiel
+Das Jiles-Atherton-Modell beschreibt -- wie oben erkennbar -- nur einen differentiellen Zusammenhang. Um Aussagen über den zeitlichen Verlauf der Magnetisierung und somit über die Kernverluste zu gewinnen, muss die jeweilige gewöhnliche Differentialgleichung integriert werden, zum Beispiel
 \begin{equation}
 B(H) = \int \frac{\dif B}{\dif H}\dif H + \text{const.}
 \end{equation}
@@ -230,7 +232,7 @@ Um die Schrittweise nicht zu klein wählen zu müssen und somit den Rechenaufwan
 Eine weitere Möglichkeit, den Rechenaufwand zu reduzieren ist eine adaptive Schrittweitensteuerung: Man schätzt mit einem weiteren Zwischenschritt den Fehler und kann so die Schrittweite jeweils so groß wie möglich wählen (vgl. Runge-Kutta-Fehlberg-Methode).\\
 Die Wahl des richtigen Algorithmus ist stets vom genauen Problem abhängig, für die vorliegende Integration des Jiles-Atherton-Modells eignet sich laut \cite{ja-rk} jedoch der viel verwendete RK4-Algorithmus mit fester Schrittweite.
 \subsection{Runge-Kutta-Methoden}
-Die Euler-Verfahren sind Sonderfälle der Runge-Kutta-Methoden, welche eine wichtige Klasse von Einschrittverfahren darstellen. Der m-stufige Algorithmus benötigt Gewichte $\alpha_i, \gamma_i, 1 \le i \le m$ und $\beta_{i,l}, 1\le i, l\le m$. Weiterhin müssen die Schrittweiten  $h_i$ vorgegeben werden, zur Vereinfachung soll jedoch eine feste Schrittweite $h$ angenommen werden.\\
+Die eben vorgestellten Euler-Verfahren sind Sonderfälle der Runge-Kutta-Methoden, welche eine wichtige Klasse von Einschrittverfahren darstellen. Der m-stufige Algorithmus benötigt Gewichte $\alpha_i, \gamma_i, 1 \le i \le m$ und $\beta_{i,l}, 1\le i, l\le m$. Weiterhin müssen die Schrittweiten  $h_i$ vorgegeben werden, zur Vereinfachung soll jedoch eine feste Schrittweite $h$ angenommen werden.\\
 Für den nächsten Datenpunkt berechnet man:
 \begin{equation}
 \begin{aligned}
@@ -296,7 +298,7 @@ Entsprechend der Definition in \ref{eq:RK4} gilt nun
 \end{aligned}
 \end{equation}
 Dies beschreibt jeweils einen Schritt des Integrationsverfahrens. Führt man diesen für alle Zeitpunkte durch, erhält man die Magnetisierung $M$ für die gewählte Feldvorgabe $H$ und die Modellparameter $\vec{p}$.\\
-Der beschriebene Algorithmus wurde, um eine hohe numerische Effizienz zu erzielen, in der Programmiersprache \emph{C++} implementiert. Dabei wurde jedoch nur die Variante mit dem H-Feld verwendet, da die andere numerisch sehr instabil erschien. Um diese funktionsfähig zu machen muss vermutlich auf implizite Verfahren zurückgegriffen werden. Eine genauere Untersuchung dieses Problems steht jedoch aus.
+Der beschriebene Algorithmus wurde, um eine hohe numerische Effizienz zu erzielen, in der Programmiersprache \emph{C++} implementiert.
 \subsection{Numerische Details}
 Um die Stabilität des Algorithmus zu optimieren, gibt es einige Details, die beachtet werden müssen.
 \paragraph{Die Langevin-Funktion}
@@ -372,10 +374,10 @@ endfig;
 }
 \end{figure}
 \par In Abbildung \ref{fig:single_curve} ist eine einzelne Hysteresekurve gezeigt. In diesem Fall ist auch die Neukurve dargestellt, die vom Modell ebenfalls repliziert wird. Im Gegensatz zu den meisten Messkurven beginnt die Neukurve im Jiles-Atherton-Modell jedoch näherungsweise linear. 
-\subsection{Stromanregung}
+\subsection{Sinusförmiger Strom}
 Wie oben gezeigt, kann man entweder $\dif B/\dif H$ oder $\dif H/\dif B$ integrieren. Gibt man einen Strom vor, so ist $\dif H$ festgelegt, man verwendet also $\dif B/\dif H$. Wird der Kern mit einer Spannung angeregt, nutzt man $\dif H/\dif B$. Im Allgemeinen wird man den Kern ohnehin eingebettet in einem Netzwerk betrachten und auch die Integration entsprechend anpassen.\\
 \begin{figure}[h]
-\fcapside[\FBwidth]{\caption{Verlauf von $H$- und $B$-Feld bei sinusförmiger Stromanregung. Durch die nichtlinearen Kerneigenschaften wird die Form des Sinus stark verbreitert, entsprechend treten hohe Steigungen bei den Nulldurchgängen der magnetischen Flussdichte auf.}\label{fig:current_hb}}{
+\fcapside[\FBwidth]{\caption{Verlauf von $H$- und $B$-Feld bei vorgegebenem sinusförmigen Strom. Durch die nichtlinearen Kerneigenschaften wird die Form des Sinus stark verbreitert, entsprechend treten hohe Steigungen bei den Nulldurchgängen der magnetischen Flussdichte auf.}\label{fig:current_hb}}{
 	
 \begin{mplibcode}
 input graph;
@@ -414,7 +416,7 @@ endfig;
 \end{figure}
 
 \begin{figure}[h]
-\fcapside[\FBwidth]{\caption{Verlauf von Strom und Spannung bei sinusförmiger Stromanregung. Die steilen Flanken der Hysteresekurve führen zu großen Spannungsspitzen durch $\rot E = - \partial B/\partial t$.}\label{fig:current_ui}}{
+\fcapside[\FBwidth]{\caption{Verlauf von Strom und Spannung bei einem sinusförmigen Strom. Die steilen Flanken der Hysteresekurve führen zu großen Spannungsspitzen durch $\rot E = - \partial B/\partial t$.}\label{fig:current_ui}}{
 	
 \begin{mplibcode}
 input graph;
@@ -453,12 +455,11 @@ endfig;
 \end{figure}
 
 In Abbildung ist der Verlauf von $B$ und $H$-Feld bei Anregung mit einem sinusförmigen Strom gezeigt -- die Sättigungscharakteristik rundet die Spitzen des Sinus deutlich ab, je mehr die Aussteuerung in die Sättigung geht, desto mehr nähert sich die zeitliche Form des $B$-Feldes einer Rechteckschwingung an.\\
-Da das Induktionsgesetz die induzierte Spannung mit der zeitlichen Ableitung der magnetischen Flussdichte verknüpft, wird deutlich, dass hier Probleme mit Überpannungen auftreten können -- die steilen Flanken im Verlauf des $B$-Feldes führen zu Spannungsspitzen, die die Isolation des induktiven Bauelements beschädigen können.\par
-Die Anregung mit Strömen tritt in der Praxis nur selten auf, weshalb dieses Problem nur in einigen Spezialfällen Probleme verursachen dürfte, ein Beispiel wären Stromwandler, die sehr große Wechselströme heruntertransformieren, um sie Messgeräten zuzuführen.
-\subsection{Spannungsanregung}
-Der weitaus üblichere Fall ist, dass der Kern näherungsweise von einer Spannungsquelle angeregt wird. Dies ist etwa der typische Fall in einem Transformator, bei dem der Magnetisierungsstrom in erster Näherung von der Primärspannung abhängt.
+Da das Induktionsgesetz die induzierte Spannung mit der zeitlichen Ableitung der magnetischen Flussdichte verknüpft, wird deutlich, dass hier Probleme mit Überpannungen auftreten können -- die steilen Flanken im Verlauf des $B$-Feldes führen zu Spannungsspitzen, die die Isolation des induktiven Bauelements beschädigen können.
+\subsection{Sinusförmige Spannung}
+Als zweites Beispiel wird nun eine sinusförmige Spannung vorgegeben.
 \begin{figure}[h]
-\fcapside[\FBwidth]{\caption{Verlauf von $H$- und $B$-Feld bei sinusförmiger Spannungsanregung. Der typische Verlauf des Magnetisierungsverlauf wird deutlich -- kommt die Induktion in die Nähe der Sättigung, steigt das $H$-Feld und somit der Strom stark an.}\label{fig:voltage_hb}}{
+\fcapside[\FBwidth]{\caption{Verlauf von $H$- und $B$-Feld bei sinusförmiger Spannung. Der typische Verlauf des Magnetisierungsstroms wird deutlich -- kommt die Induktion in die Nähe der Sättigung, steigt das $H$-Feld und somit der Strom stark an.}\label{fig:voltage_hb}}{
 	
 \begin{mplibcode}
 input graph;
@@ -497,7 +498,7 @@ endfig;
 \end{figure}
 
 \begin{figure}[h]
-\fcapside[\FBwidth]{\caption{Verlauf von Strom und Spannung bei sinusförmiger Spannungsanregung.}\label{fig:current_ui}}{
+\fcapside[\FBwidth]{\caption{Verlauf von Strom und Spannung bei sinusförmiger Spannung.}\label{fig:current_ui}}{
 	
 \begin{mplibcode}
 input graph;
@@ -537,32 +538,64 @@ endfig;
 Wie man in den Abbildungen oder auch den Hysteresekurven sieht, wächst der Strom für hohe Induktionen extrem stark an, die Sättigung tritt ein und verursacht enorm hohe Verluste in den Leitern. Daher muss dieser Zustand bei der Auslegung von induktiven Bauelementen im Allgemeinen unbedingt vermieden werden.
 \subsection{Allgemeiner Fall}
 Im allgemeinen Fall kann man das induktive Bauelement natürlich nicht isoliert betrachten. Vielmehr muss man das Modell des Kerns in ein allgemeines Schaltungsmodell einbinden und dieses transient lösen. So kann man dann auch diverse Themen wie das Einschaltverhalten, das Schaltungsverhalten an der Grenze zur Sättigung oder die Kernverluste im Betrieb untersuchen.
+\subsection{Berechnung der Kernverluste}
+Ein transientes Hysteresemodell ist dann sinnvoll einsetzbar, wenn es in der Praxis von Ingenieuren Vorteile bringt. Entscheidend ist daher einerseits, dass man damit Sättigungsprobleme erkennen kann, andererseits aber, dass man Kernverluste vorhersagen kann: Kennt man die Geometrie der Anordnung sowie Spannungs- und Stromform, möchte man ermitteln können, wo im Kern welche Verlustleistung auftritt.\\
+Die Verlustleistung lässt sich -- wie immer im Zusammenhang mit Maxwell-Gleichungen -- aus dem Poynting-Vektor bestimmen. Es gilt
+\begin{equation}
+	- \div\vec S = \vec E \cdot \vec J + \vec E \cdot \frac{\partial \vec D}{\partial t} + \vec H \cdot \frac{\partial \vec B}{\partial t}.
+\end{equation}
+Der erste Term auf der rechten Seite beschreibt die ohmschen Verluste, die in den Leitern auftreten. Der zweite Teil ist die elektrische Energiedichte, die auch dielektrische Verluste enthält. Der letzte Term ist der relevante für die magnetischen Größen, er beschreibt die magnetische Energiedichte.\\
+Nimmt man im ersten Schritt an, $\vec H$ und $\vec B$ sind (reell) linear verknüpft, so wird sofort klar, dass bei einer periodischen Aussteuerung keine Verlustleistung auftritt: $H$ und $\partial B/\partial B$ wären um \SI{90}{\degree} phasenverschoben und sind somit orthogonal zueinander -- ein Zeitmittel ergibt den Wert 0.\\
+Nimmt man nun jedoch hysteretisches Verhalten an, so kann man schnell sehen, dass nun Leistungsdissipation vorhanden ist. Es gilt
+\begin{equation}
+	P_{\text{v,mag}} = \frac{1}{T}\int_0^T  H \cdot \frac{\partial  B}{\partial t} \dif t = \frac{1}{T}\int_{\text{Schleife}}  H \cdot \dif B,
+\end{equation}
+man kann also das Zeitintegral in ein Integral über die Hysteresekurve umwandeln, die dissipierte Energie kann man also als die Fläche in der Hystereseschleife auffassen -- multipliziert mit der Frequenz $f$.
+\subsection{Grenzen des Modells}
+Wie bei den verschiedenen Versuchen bei der Implementation gesehen werden konnte, lässt das Jiles-Atherton-Modell viele unphysikalische Parameterkombinationen zu.\\
+So lassen sich beispielsweise Kurven erzeugen, bei denen die Magnetisierung weiter ansteigt, obwohl das erregende Feld bereits abfällt. Dies lässt sich in der Realität nicht beobachten -- $\partial B/\partial t$ und $\partial H/\partial t$ haben stets das gleiche Vorzeichen.\\
+Dies wäre kein Problem, wenn leicht bestimmbar wäre, ob eine Parameterkomination zulässig ist oder nicht -- eine solche Regel lässt sich in der Fachliteratur jedoch nicht finden.\par
+Der andere entscheidende Fehler des Modells ist, dass es sogenannte \emph{minor loops}, die z.B. durch Oberwellen in der Stromform entstehen, nicht richtig reproduziert. In Messungen beobachtet man, dass Subschleifen auf den Ästen der Hystereseschleife stets geschlossen sind. Im Jiles-Atherton-Modell sind diese Subschleifen jedoch nicht geschlossen, der Endpunkt liegt meist ein Stück ober- oder unterhalb vom Startpunkt der Subschleife.\\
+Bei Modellen, die Stromformen mit mehreren Richtungswechseln in einer Periode enthalten, ist das Jiles-Atherton-Modell somit intrinsisch fehlerhaft.
 \section{Parameteridentifikation}
-Wie am Anfang beschrieben wurde, ist das Ziel dieses Projektes einerseits, das Jiles-Atherton zu untersuchen, andererseits aber vor allem, eine neue Möglichkeit zu finden, um die Modellparameter aus Messdaten zu extrahieren.\\
-Der neue Ansatz ist hierbei, die Methoden des algorithmischen Differenzierens zu nutzen, um Jacobi- und Hesse-Matrix für Optimierungsalgorithmen bereitzustellen.
-\subsection{Least-Squares-Methode}
-Die Standardmethode um Modelle an Messdaten anzupassen, ist die Methode der kleinsten Fehlerquadrate:\\
-Man nimmt an, dass die beste Übereinstimmung von Modell und Messung gegeben ist, wenn die Summe der quadratischen Abweichungen minimal ist. Ist $f(\vec x, \vec p)$ die Modellfunktion, die von Eingangswerten $\vec x$ und Parametern $\vec p$ abhängt, so muss man das Minimum der Kostenfunktion
+Wie am Anfang beschrieben wurde, ist das Ziel dieses Projektes einerseits, das Jiles-Atherton zu untersuchen, andererseits aber vor allem, eine neue Möglichkeit zu finden, um die Modellparameter aus Messdaten zu extrahieren.
+\subsection{Methode der kleinsten Fehlerquadrate}
+Der typische Ansatz, um Modelle an Messdaten anzupassen ist die \emph{Methode der kleinsten Fehlerquadrate}. Bei ihr nimmt man an, dass die beste Übereinstimmung von Modell und Messung gegeben ist, wenn die Summe der quadratischen Abweichungen minimal ist. Ist $f(\vec x, \vec p)$ die Modellfunktion, die von Eingangswerten $\vec x$ und Parametern $\vec p$ abhängt, so muss man das Minimum der Kostenfunktion
 \begin{equation}
 	\text{cost}(\vec p) = \sum_i \left(f(x_i, \vec p)-y_i\right)^2
 \end{equation}
 finden, um die beste Übereinstimmung des Modells mit den gemessenen Daten $\vec y$ zu erhalten.\\
 Die zu lösende mathematische Aufgabe ist also die Minimierung einer im Allgemeinen nichtlinearen und nicht konvexen Funktion. Für die Lösung dieser Problemstellung wurden diverse Algorithmen entworfen, die sich grob in zwei Klassen unterteilen lassen können: Ableitungsfreie Methoden und Methoden, die  Ableitungen -- zumindest die Erste -- der zu minimierenden Funktion benötigen.\\
-Im Allgemeinen sind Methoden, die Ableitungen nutzen, erfolgreicher, da sie für den nächsten Optimierungsschritt jeweils über Informationen verfügen, in welcher Richtung der Umgebung des aktuellen Schätzwertes die Kostenfunktion am steilsten abfällt. So kann insbesondere die Zahl der Funktionsauswertungen reduziert werden, was insbesondere dann relevant ist, wenn die Funktion rechnerisch teuer ist. Daher kommen gradientenfreie Verfahren üblicherweise erst dann zum Einsatz, wenn Gradientenverfahren nicht mehr einsetzbar sind -- dies ist dann der Fall, wenn Informationen über die Ableitungen nur schwer zu erhalten sind.
-\subsection{Probleme bei der Parameteridentifikation für das Jiles-Atherton-Modell}
-In der Literatur zum Jiles-Atherton-Modell finden sich viele Ansätze, um mittels gradientenfreier Verfahren auf die Parameter zu schließen. Bei fast all diesen Ansätzen gibt es jedoch ein entscheidendes Problem: Die Geometrie der Probe wird schlicht vernachlässigt -- während man dies bei toroidförmigen Kernen herausrechnen kann, führt es bei Kernen mit keiner derartig großen Symmetrie zu Fehlern. Dies wirkt sich insbesondere auf die Messung von Schichtblech- und Schnittbandkernen aus, da diese nicht toroidförmig erhältlich sind.\\
-Die Hysteresekurve wird in solchen Geometrien an verschiedenen Punkten im Material mit verschiedenen Phasenlagen und Amplituden durchlaufen, die messbaren Größen, Spannung und Strom, lassen somit nur einen Schluss auf die integrale und somit geometrieabhängige Hysteresekurve zu.\par
+Im Allgemeinen sind Methoden, die Ableitungen nutzen, erfolgreicher, da sie für den nächsten Optimierungsschritt jeweils über Informationen verfügen, in welcher Richtung der Umgebung des aktuellen Schätzwertes die Kostenfunktion am steilsten abfällt. So kann insbesondere die Zahl der Funktionsauswertungen reduziert werden, was insbesondere dann relevant ist, wenn die Funktion rechnerisch teuer ist. Daher kommen gradientenfreie Verfahren üblicherweise dann zum Einsatz, wenn der Rechenaufwand für die Berechnung der auszuwertenden Funktion sehr klein ist oder aber der Gradient nur sehr schwer ermittelbar ist.
+\subsection{Ansätze}
+In der Fachliteratur gibt es diverse Ansätze für die Minimierung dieser Kostenfunktion:
+\begin{itemize}
+	\item Neuronale Netze \cite{neural},
+	\item Simulated annealing \cite{annealing},
+	\item Genetische Algorithmen \cite{genetic}, \cite{genetic2},
+	\item Differential Evolution \cite{de},
+	\item Partikelschwarmoptimierung \cite{particle_swarm},
+	\item Softcomputing \cite{softcomputing} und
+	\item Random Search \cite{random},
+\end{itemize}
+einen Überblick bietet \cite{vergleich}.\par
+All diese Ansätze sind gradientenfrei, da der Gradient schwer zu beschaffen ist. Weiterhin ist all diesen Ansätzen gemein, dass sie meistens erst dann zum Einsatz kommen, wenn die typischen, \emph{einfachen} Ansätze nicht funktionieren. Entsprechend sind sie alle eher langsam und rechenaufwändig.\\
+Hier kommen nun die Methoden des algorithmischen Differenzierens zum tragen: Schafft man es mit diesen, numerisch stabile Informationen über die Ableitungen der Kostenfunktion zu generieren, lässt sich der einfachste Ansatz zur Parameteridentifikation nutzen: die Minimierung der Kostenfunktion mit ganz normalen Gradientenverfahren.\\
+Hat man Ableitungsdaten, kann man auf eine ganze Palette von Minimierungsalgorithmen zurückgreifen, die schnell (im Sinne von Zeit und von Funktionsaufrufen) konvergieren und somit auch die Anpassung von sehr vielen Messdaten in tragbarer Zeit erlauben.
+\subsection{Geometrie und Parameteridentifikation}
+Neben den bereits genannten Problemen der bisherigen Ansätze zur Parameteridentifikation kommt ein weiteres, entscheidendes hinzu: Die Geometrie der Probe wird schlicht vernachlässigt -- während man dies bei toroidförmigen Kernen herausrechnen kann, führt es bei Kernen mit keiner derartig großen Symmetrie zu Fehlern, da das inhomogene Feld im Kern als homogen angenommen wird.\\
+In Wahrheit wird die Hysteresekurve jedoch an verschiedenen Punkten im Material mit verschiedenen Phasenlagen und Amplituden durchlaufen, die messbaren Größen -- Spannung und Strom -- lassen somit nur einen Schluss auf die integrale und somit geometrieabhängige Hysteresekurve zu. Dies gilt insbesondere auch für Messungen mit dem Epsteinrahmen, dem normierten Testaufbau für Elektrobleche.\par
 Ziel dieser Arbeit ist es nun, die Geometrie in die Rechnung einzubeziehen. Dazu muss das Jiles-Atherton-Modell in eine orts- und zeitaufgelöste Simulation integriert werden (vgl. \cite{sadowski}, \cite{Bergqvist}), anschließend müssen Strom und Spannung aus dem Modell gewonnen und mit den Messdaten in die Kostenfunktion überführt werden.\\
-Offensichtlich ist nun die ursprünglich numerisch wenig aufwändige Funktionsauswertung des Vorwärtsmodells um Größenordnungen teurer geworden. Ein gradientenfreies Verfahren, welches eine kleinere Konvergenzrate hat, dafür aber keine Gradienten berechnen muss, kommt nun nicht mehr infrage -- die Zahl der Funktionsauswertungen ist um Größenordnungen größer als bei Gradientenverfahren.\par
+Offensichtlich ist nun die ursprünglich numerisch wenig aufwändige Funktionsauswertung des Vorwärtsmodells um Größenordnungen teurer geworden. Ein gradientenfreies Verfahren, welches eine kleinere Konvergenzrate hat, dafür aber keine Gradienten berechnen muss, kommt nun noch weniger infrage -- die Zahl der Funktionsauswertungen ist um Größenordnungen größer als bei Gradientenverfahren.\par
 Um das Ziel der Parameteridentifikation unter Beachtung der Geometrie zu ermöglichen, muss also eine Möglichkeit gefunden werden, die Ableitung(en) der Kostenfunktion zu bestimmen. Dafür gibt es drei Möglichkeiten:
 \begin{itemize}
 	\item Symbolische Berechnung
 	\item Numerische Berechnung (Differenzenquotienten)
 	\item Automatisches Differenzieren
 \end{itemize}
-Um die Ableitungen symbolisch zu bestimmen, müssten die relativ komplizierten Gleichungen einzeln differenziert und die jeweiligen Funktionen ebenfalls in den Programmcode geschrieben werden. Dies stellt gerade bei großer Parameterzahl einen enormen Entwicklungsaufwand dar, ist fehleranfällig und meist relativ ineffizient.\\
-Die Effizienz ist bei der Berechnung mittels Differenzenquotienten kein Problem -- sie ist hier besonders hoch. Im Kontrast dazu ist jedoch die Genauigkeit sehr klein: Ist die Schrittweite sehr klein, liegen die zwei Funktionswerte eines Quotienten sehr nah beieinander -- dies kann z.B. dazu führen, dass sich zwei Zahlen, die jeweils \SI{32}{\Bit} breit sind, nur in den letzten 5 Stellen unterscheiden. Ein enormer Genauigkeitsverlust ist die Folge.\par
-Einen Mittelweg zwischen Geschwindigkeit und Genauigkeit bietet die dritte Methode, das automatische Differenzieren.
+Um die Ableitungen symbolisch zu bestimmen, müssten die relativ komplizierten Gleichungen einzeln differenziert und die jeweiligen Funktionen ebenfalls in den Programmcode geschrieben werden. Dies ist gerade unter dem Aspekt, dass schon eine analytische Integration des Jiles-Atherton-Modells unmöglich ist, nicht möglich, da man auch die Integration symbolisch differenzieren müsste.\\
+Die Effizienz ist bei der Berechnung mittels Differenzenquotienten kein Problem -- sie ist hier besonders hoch. Im Kontrast dazu ist jedoch die Genauigkeit sehr klein: Ist die Schrittweite sehr gering, liegen die zwei Funktionswerte eines Quotienten sehr nah beieinander -- dies kann z.B. dazu führen, dass sich zwei Zahlen, die jeweils \SI{32}{\Bit} breit sind, nur in den letzten 5 Stellen unterscheiden. Ein enormer Genauigkeitsverlust ist die Folge.\par
+Einen Mittelweg zwischen Geschwindigkeit und Genauigkeit bietet die dritte Methode, das automatische Differenzieren:
 \section{Automatisches Differenzieren}
 Die Grundidee des automatischen Differenzierens ist relativ simpel: Die Ableitung einer gegebenen Funktion wird mithilfe der Kettenregel so lange umgeformt, bis nur noch Basisfunktionen vorkommen, für die die Ableitung hinterlegt ist.\\
 Man unterscheidet zwischen zwei grundlegenden Vorgehensweisen, \emph{Forward-} und dem \emph{Reverse-Mode}.
@@ -590,10 +623,10 @@ Aufgabe ist es nun, aus diesem Graphen die Ableitung der Funktion (also dem Wert
 	\tfrac{\partial v_4}{\partial v_3} &= -\tfrac{v_2}{v_3^2}.
 \end{aligned}
 \end{equation*}
-Diese Ableitungen müssen hinterlegt werden. Da die Basisfunktionen jedoch in den meisten Fällen aus einer relativ kleinen Gruppe stammen, sind diese in den Paketen für automatische Differentiation meistens schon definiert. Für Funktionen, die darüber hinaus gehen, müssen der Operator und seine Ableitung bzw. Ableitungen registriert werden.
+Diese Ableitungen müssen hinterlegt werden. Da die Basisfunktionen jedoch in den meisten Fällen aus einer relativ kleinen Gruppe stammen, sind diese in den Paketen für automatische Differenziation meistens schon definiert. Für Funktionen, die darüber hinaus gehen, müssen der Operator und seine Ableitung bzw. Ableitungen registriert werden.
 \subsection{Forward Mode}
 
-Im \emph{Forward-Mode} wertet man die Funktion nun genauso aus wie sonst -- bezüglich der Klammern von innen nach außen. Dabei notiert man jedoch auch neben der Funktion stets die Ableitungen der einzelnen Ausdrücke. Soll beispielsweise die Ableitung nach $x_2$ im Punkt $(1,2)$ ermittelt werden:
+Im \emph{Forward-Mode} wertet man die Funktion nun genauso aus wie sonst -- bezüglich der Klammern von innen nach außen. Dabei notiert man jedoch auch neben der Funktion stets die Ableitungen der einzelnen Ausdrücke nach dem gewünschten Parameter. Soll beispielsweise die Ableitung nach $x_2$ im Punkt $(1,2)$ ermittelt werden:
 \begin{equation*}
 \begin{aligned}
 	x_1 &&= 1\\
@@ -603,7 +636,7 @@ Im \emph{Forward-Mode} wertet man die Funktion nun genauso aus wie sonst -- bez�
 	v_1 &= x_1/x_2 &= \num{0,5} \\
 	\dot{v}_1 &= \tfrac{\partial v_1}{\partial x_1}\dot{x}_1 + \tfrac{\partial v_1}{\partial x_2}\dot{x}_2 = \tfrac{1}{x_2}\dot{x}_1 - \tfrac{x_1}{x_2^2}\dot{x}_2 = \tfrac{1}{2}0 - \tfrac{1}{2^2}1 &= \num{-0,25}\\[0.3cm]
 	v_2 &= \sin(v_1) = \sin(1/2) &= \num{0.479425539}\\
-	\dot{v}_2 &= \tfrac{\partial v_2}{\partial v_1}\dot{v}_1 = \cos(v_1)\dot v_1 = \cos(\num{0,5})(-\num{0,25}) &= \num{0.219395640}\\[0.3cm]
+	\dot{v}_2 &= \tfrac{\partial v_2}{\partial v_1}\dot{v}_1 = \cos(v_1)\dot v_1 = \cos(\num{0,5})(-\num{0,25}) &= \num{-0.219395640}\\[0.3cm]
 	v_3 &= \exp(v_1) &= \num{1.648721271}\\
 	\dot v_3 &= \tfrac{\partial v_3}{\partial v_1}\dot v_1 = \exp(v_1)\dot v_1 &= \num{-0.412180317} \\[0.3cm]
 	v_4 &= \tfrac{v_2}{v_3} &= \num{0.290786288} \\
@@ -642,61 +675,42 @@ und
 \end{equation}
 Für große Parameteranzahlen ist somit immer der \emph{Reverse Mode} zu bevorzugen, der \emph{Forward Mode} hat seine Vorteile dort, wo eine Vielzahl von Funktionen nach einem Parametersatz abgeleitet werden soll. Dies kommt in der Praxis üblicherweise seltener vor.\\
 Ein zentrales Beispiel für die Ableitung einer Funktion nach sehr vielen Parametern ist die Backpropagation in Neuronalen Netzen aus dem Forschungsfeld der künstlichen Intelligenz. Hier werden Netze aus nichtlinearen Funktionen programmiert, die näherungsweise jede nichtlineare Funktion nachbilden können. Die genaue Übertragungsfunktion eines solchen neuronalen Netzes wird dabei von den sogenannten \emph{weights} und \emph{biases} bestimmt, dies sind mehr oder weniger skalare Eingangsparameter der Funktion.\\
-Nach genau diesen Gewichten wird abgeleitet, wenn ein neuronales Netz trainiert wird: Mittels Optimierungsalgorithmen werden die Gewichte so angepasst, dass die Trainsingsdaten möglichst genau repliziert werden. Das Anlernen eines neuronalen Netzes ist also genau die gleiche Problemstellung  wie die Anpassung von Modellparametern an Messdaten -- lediglich die innere Struktur des Modells und des neuronalen Netzes unterscheiden sich.\\
+Nach genau diesen Gewichten wird abgeleitet, wenn ein neuronales Netz trainiert wird: Mittels Optimierungsalgorithmen werden die Gewichte so angepasst, dass die Trainingsdaten möglichst genau repliziert werden. Das Anlernen eines neuronalen Netzes ist also genau die gleiche Problemstellung  wie die Anpassung von Modellparametern an Messdaten -- lediglich die innere Struktur des Modells und des neuronalen Netzes unterscheiden sich.\\
 \subsection{Weiterführendes}
 Die beiden dargestellten Grundalgorithmen lassen sich auf beliebige numerische Programme anwenden -- einzige Bedingung ist, dass für alle Grundoperationen die einfache Ableitung hinterlegt ist.\\
 Auch Unterprogramme, Verzweigungen oder Schleifen sind kein Problem -- der Rechengraph kann stets durch „Mitschreiben” der ausgeführten Blöcke generiert werden. Eine typische Technik hierfür ist das Überladen von Datentypen und Operatoren -- immer wenn ein Operator auf eine Variable angewandt wird, wird im Rechenbaum eine Kante für die Variable und ein Knoten für den Operator hinterlegt. Beliebig komplexe numerische Modelle können so in einen Rechengraphen überführt und anschließend mit den Methoden des automatischen Differenzierens abgeleitet werden.\\
 Der andere Ansatz, um das automatische Differenzieren zu implementieren, ist die Quelltexttransformation. Statt den Rechengraphen zur Laufzeit aufzustellen, wird er aus dem vorliegenden Vorwärts-Algorithmus im Vorhinein generiert. Dies ist technisch schwieriger umzusetzen, bietet jedoch Vorteile in der Geschwindigkeit, da bei der anschließenden Kompilierung Optimierungen vorgenommen werden.\\
 Abgesehen von den beiden Basisalgorithmen wurden weitere Methoden entwickelt, um die Komplexität und damit die Rechenzeit der Algorithmen weiter zu reduzieren. Diese basieren oft auf der Idee der Taylor-Entwicklung oder der Operator-Algebra nach Heaviside.
-\section{Implementation für das Jiles-Atherton-Modell}
-Es gibt Aufsätze, in denen versucht wird, mit einem neuronalen Netz die Optimierung der Parameter des Jiles-Atherton-Modells vorzunehmen. Mathematisch betrachtet ist dies nur das Einbringen von zusätzlichen Freiheitsgraden/Variablen, zusätzlich zu den fünf Parametern $\alpha$, $a$, $M_sat$, $k$ und $c$. Sinnvoller erscheint es, die Hysterese selbst mit einem neuronalen Netz zu modellieren, wie es andere Aufsätze machen.\\
-Die ersten Versuche, das Jiles-Atherton-Modell abzuleiten, fanden aufgrund der hohen Entwicklungsgeschwindigkeit in der Programmiersprache \emph{Python} statt. Der hohen Entwicklungsgeschwindigkeit stand jedoch eine sehr kleine Rechengeschwindigkeit des resultierenden Algorithmus entgegen.\\
-Aus diesem Grund wurden das Modell und die Differenziation in die Programmiersprache \emph{C++} übertragen, welche numerisch deutlich effizienter ist. Um dennoch schnelle und einfache Auswertungen zu ermöglichen, wurde ein Wrapper implementiert, dadurch kann man den schnellen Algorithmus aus \emph{Python} aufrufen.\\
-Für die algorithmische Differenziation wurde auf das Paket \emph{CppAD}\footnote{\url{https://www.coin-or.org/CppAD/}} zurückgegriffen, welches sehr effiziente AD-Routinen bietet. \emph{CppAD} wurde von Bradley M. Bell entwickelt und ist Teil des Mathematik-Software-Projekt \emph{COIN-OR}\footnote{Computational Infrastructure for Operations Research, \url{https://www.coin-or.org}}
+\par Weiterhin kann das Prinzip des automatischen Differenzierens abstrahiert werden. Die Variablen müssen keine einzelnen Zahlen und die Operatoren keine einfachen Funktionen sein. Es lässt sich genauso auf Vektoren, Matritzen, Tensoren allgemeiner Art und beliebige höherwertige Operatoren anwenden.\par
+Dies macht sich das Paket \emph{dolfin-adjoint} zunutze. Es wendet die dargestellten Grundprinzipien auf Berechnungen mit der Finite-Elemente-Methode an. Dabei sind Funktionen auf Finite-Elemente-Räumen (Vektoren mit Werten für die verschiedenen Werte in den Finiten Elementen) die Variablen, die Operatoren sind z.B. die \emph{Assemblies}, also das Aufstellen von Steifigkeitsmatritzen aus den Differentialgleichungen, das Anwenden von Randbedingungen, das Lösen von Gleichungssystemen oder Operatoren und Funktionen im klassischen Sinn, wie z.B. die Addition von zwei FEM-Funktionen.\\
+Für den oben erwähnten zweiten Projektteil soll dieses Paket verwendet werden -- die Parameteridentifikation nach dem vorgeschlagenen Schema wird damit auch unter Einbezug der Geometrie möglich: Man kann so Gradienten eines Funktionals auf Finite-Elemente-Räumen nach beliebigen Eingangsparametern bestimmen.\par
+Weitere Informationen zu \emph{dolfin-adjoint} finden sich auf der Projektseite\footnote{\url{http://www.dolfin-adjoint.org}} und in der zugehörigen Veröffentlichung \cite{dolfin-adjoint}. Das Finite-Elemente-Paket \emph{Fenics/Dolfin}, auf das \emph{dolfin-adjoint} aufsetzt, ist unter anderem in \cite{fenics} und \cite{dolfin} beschrieben. Es gibt aber auch eine ausführliche Dokumentation im Internet\footnote{\url{https://fenicsproject.org}}, sowie Bücher \cite{fenics-tutorial}, \cite{fenics-book}.\par
+Informationen zum automatischen Differenzieren im Allgemeinen findet man z.B. bei \cite{naumann} oder \cite{evaluating}.
+\section{Implementation für das skalare Modell}
+Im folgenden Abschnitt soll nun erläutert werden, wie das Modell, seine Ableitung und die Optimierung genau implementiert wurden.\\
+Die ersten Versuche, das Jiles-Atherton-Modell zu formulieren und abzuleiten, fanden aufgrund der hohen Entwicklungsgeschwindigkeit in der Programmiersprache \emph{Python} statt. In dieser stehen mit \emph{Algopy} \cite{Algopy}, \emph{autograd}\footnote{\url{https://github.com/HIPS/autograd}} und \emph{ad} \cite{ad} diverse Pakete zur Verfügung, die alle eine leicht zugängliche Programmierschnittstelle haben. Jedoch haben Tests gezeigt, dass die Rechengeschwindigkeit der Implementationen deutlich zu klein für eine sinnvolle Anwendung ist. Dies liegt in der Natur der Sprache Python, die aufgrund ihrer Einfachheit sehr schnelles Entwickeln erlaubt, jedoch nicht besonders effizient ist, da sie auf statische Typisierung verzichtet und zur Laufzeit interpretiert wird.\\
+Das Thema der Geschwindigkeit wird (teils für andere Pakete) in \cite{speed} diskutiert. Im Vergleich verschiedener Implementationen von Automatischer Differenziation zeigt der Artikel, dass von den verglichenen Paketen ein auf \emph{CppAD} \cite{CppAD2012} basierendes am schnellsten ist.\\
+Aus diesem Grund wurden das Modell und die Differenziation in die Programmiersprache \emph{C++} übertragen, welche numerisch um Größenordnungen schneller als Python ist und in der \emph{CppAD} geschrieben ist. Um dennoch einfache und schnelle Auswertungen zu ermöglichen, wurde ein Wrapper mithilfe von \emph{Cython}\footnote{\url{http://cython.org}} implementiert -- dadurch kann man den schnellen Algorithmus aus \emph{Python} aufrufen.\\
+\emph{CppAD} wurde von Bradley M. Bell entwickelt und ist Teil des Mathematik-Software-Projekt \emph{COIN-OR}.\footnote{Computational Infrastructure for Operations Research, \url{https://www.coin-or.org}}\par
+Um weiterhin die Portabilität des Codes zu erhöhen, wurde ein Docker-Container\footnote{\url{https://www.docker.com}} für das Projekt aufgesetzt. Container bieten eine Möglichkeit, definierte Systemumgebungen (Betriebssystem, installierte Software, Build-Umgebungen etc.) auf einfache Weise zu definieren und insbesondere auf jedem Computer laufen zu lassen, auf dem Docker installiert ist. Um die Software der Arbeit auf einem PC zu nutzen, muss also nicht jede Abhängigkeit der Software\footnote{Die verwendeten Pakete hängen v.a. von der \emph{C++}-Bibliothek \emph{Boost} (\url{www.boost.org}) ab, welche stets aus Quelldateien kompiliert werden muss.} für das spezifische System kompiliert werden -- stattdessen kann man einfach den Container starten, der alles enthält, was benötigt wird.\\
+Der Aufbau der entwickelten Software ist in Abbildung \ref{fig:software} gegeben.
+\begin{figure}
+\caption{Struktur der Software.}\label{fig:software}
+	\includegraphics[width=\textwidth]{software}
+\end{figure}
 \subsection{Resultate}
-Um die Funktion der Algorithmen zu testen, wurden Messdaten simuliert, es wurden also mithilfe des Jiles-Atherton-Modells Kurven erzeugt, welche mit Rauschen versehen wurden. Anschließend wurden davon abweichende Startwerte für die Optimierung festgelegt und die Optimierung (unter verwendung verschiedener Algorithmen) durchgeführt. Es konnte so gezeigt werden, dass die (simulierten) Messdaten in den meisten Fällen vom Programm repliziert werden konnten.\\
-Als robuster Optimierungsalgorithmus hat sich TNC\footnote{Truncated Newton Method} erwiesen, weitere Untersuchungen hierfür stehen jedoch noch aus. Neben der grundsätzlichen Funktionsfähigkeit konnte auch gesehen werden, dass die Verfahren, die Gradienten verwenden, tatsächlich deutlich weniger Funktionsaufrufe benötigen als gradientenfreie Verfahren wie zum Beispiel das Verfahren von Nelder und Mead. Dies bestätigt den Weg, automatische Differenzierung für die Parameteridentifikation im Jiles-Atherton-Modell zu nutzen.
-\begin{figure}[h]
-\caption{Verlauf von Strom und Spannung bei sinusförmiger Stromanregung. Die steilen Flanken der Hysteresekurve führen zu großen Spannungsspitzen durch $\rot E = - \partial B/\partial t$.}\label{fig:current_ui}
-	
-\begin{mplibcode}
-input graph;
-beginfig(1);
-	lx := \mpdim{\textwidth};
-	ly := 6cm;
-	pickup pencircle scaled 0.3bp;
-	ahlength := 1mm;
-	drawarrow (0,ly/2) -- (lx, ly/2);
-	drawarrow (lx/2,0) -- (lx/2, ly);
-	pickup pencircle scaled 0.5bp;
-	label.urt(textext("\footnotesize $M$"), (lx/2, ly));
-	label.lrt(textext("\footnotesize $t$"), (lx, ly/2));
-	draw begingraph(lx,ly);    gdraw "data/optimized/test_data.txt" withpen pencircle scaled 0.1bp;    gdraw "data/optimized/result.txt";
-	itick.lft(textext(""),0) withcolor white;
-	frame.llft withcolor white;
-	endgraph;
-	
-	picture legend;
-	legend = image(
-	label.rt(textext("\footnotesize Testdaten"), (0.7*lx, 0.3*ly));
-	label.rt(textext("\footnotesize Ergebnis"), (0.7*lx, 0.15*ly));
-	draw (0.60*lx, 0.3*ly) -- (0.65*lx, 0.3*ly);
-	draw (0.60*lx, 0.15*ly) -- (0.65*lx, 0.15*ly) dashed evenly;
-	);
-	unfill bbox legend;
-	draw bbox legend withpen pencircle scaled 0.1bp;
-	draw legend;
-
-	path bounds;
-	bounds := (0, ypart llcorner currentpicture) -- lrcorner currentpicture -- urcorner currentpicture --(0, ypart ulcorner currentpicture) -- cycle;
-	setbounds currentpicture to bounds;
-endfig;
-\end{mplibcode}
+Um die Funktion der Algorithmen zu testen, wurden Messdaten simuliert, es wurden also mithilfe des Vorwärtsmodells Kurven erzeugt, welche mit Rauschen versehen wurden. Anschließend wurden davon deutlich abweichende Startwerte für die Optimierung festgelegt und die Optimierung (unter Verwendung verschiedener Algorithmen aus dem Paket \emph{SciPy} \cite{scipy}) durchgeführt. Es konnte so gezeigt werden, dass die (simulierten) Messdaten in den meisten Fällen vom Programm repliziert werden konnten.\par
+Nach einigen Tests mit verschiedenen Algorithmen, hat sich TNC\footnote{Truncated Newton Method, Implementation von SciPy \cite{scipy}. Geht zurück auf eine Doktorarbeit von Stephen Nash, Übersichtsartikel vom gleichen Autor: \cite{tnc}.} als robust erwiesen, die Parameteridentifikation konvergierte in den meisten Fälle sehr gut und schnell. Auch bei großen Rauschleveln konnte fast immer die vorgegebene Toleranz erreicht werden.\par
+Bei den Versuchen mit verschiedenen Rauschniveaus konnte jedoch ein weiteres Problem des Jiles-Atherton-Modells erkannt werden: Durch die Rauschanteile konvergierte die Funktion teilweise nicht zum Minimum, in dem die generierten Testdaten lagen, sondern zu einem Parametersatz, der eine sehr ähnliche Hysteresekurve hat, dessen Parameter jedoch deutlich von den eigentlichen abweichen.\\
+Abhilfe für dieses Problem schafft die Verwendung von vielen verschiedenen Aussteuerungen und Frequenzen, um die Parameter zu identifizieren. Je mehr Daten für die Anpassung verwendet werden und je verschiedener diese sind, desto besser werden die Werte des Algorithmus die Realität beschreiben -- unter der Annahme, dass das Jiles-Atherton-Modell das reale Material ausreichend genau beschreibt.\par
+Tatsächlich konnte auch festgestellt werden, dass die Verwendung des Gradienten die Parameteridentifikation massiv beschleunigt: Für die angepasste Kurve aus Abbildung \ref{fig:fit} benötigt beispielsweise das gradientenfreie \emph{Downhill-Simplex-Verfahren} \cite{neldermead} \num{989} Funktionsaufrufe, während das TNC-Verfahren mit dem Gradienten für die gleiche Zieltoleranz lediglich \num{25} Aufrufe benötigt. Ohne Gradientendaten konvergierte der TNC-Algorithmus überhaupt nicht -- dieses Verhalten ließ sich auch für andere Verfahren feststellen.
+\begin{figure}
+\caption{Beispiel eines angepassten Magnetisierungsverlaufes.}\label{fig:fit}
+\includegraphics[width=\textwidth]{fit}
 \end{figure}
 \section{Ausblick}
-Wie zu Beginn beschrieben, ist das Ziel, das Jiles-Atherton-Modell ortsaufgelöst anzuwenden und insbesondere ein ortsaufgelöstes inverses Modell zu entwicklen, mit dem man die Geometrieabhängigkeit und auch den Einfluss von Wirbelströmen auf die Hysteresemessungen eliminieren kann. Die Grundlage hierfür wurden mit den ausgeführten Betrachtungen gelegt. Der nächste Schritt ist der Entwurf des ortsaufgelösten Vorwärts-Modells mithilfe des Finite-Elemente-Pakets \emph{Fenics}. Im nächsten Schritt gilt es, einen Jiles-Atherton-Funktionsblock für die Software \emph{dolfin-adjoint} zu schreiben. \emph{dolfin-adjoint} ist ein Softwarepaket, welches das Konzept des automatischen Differenzierens für Finite-Elemente-Berechnungen abstrahiert und somit \emph{Reverse-Mode}-Berechnungen auf einem ganzen Finite-Elemente-Modell zulässt.\\
-Neben diesen theoretischen Arbeiten müssen Messdaten gewonnen werden. Dazu ist geplant, einen automatisierten Messaufbau zu entwerfen, der Kernverluste und Hysteresekurven Frequenz-, Temperatur- und Amplituden-abhängig misst.
-\appendix
+Wie zu Beginn beschrieben, ist das Ziel, das Jiles-Atherton-Modell ortsaufgelöst anzuwenden und insbesondere ein ortsaufgelöstes inverses Modell zu entwicklen, mit dem man die Geometrieabhängigkeit und auch den Einfluss von Wirbelströmen auf die Hysteresemessungen eliminieren kann. Die Grundlage hierfür wurden mit den ausgeführten Betrachtungen und dem erfolgreichen Test ohne Ortsauflösung gelegt. Der nächste Schritt ist der Entwurf des ortsaufgelösten Vorwärts-Modells mithilfe des Finite-Elemente-Pakets \emph{Fenics}. Danach gilt es, einen Jiles-Atherton-Funktionsblock für \emph{dolfin-adjoint} zu schreiben, der genaue Aufbau des zweiten Projektteils ist in Abbildung \ref{fig:vorgehen_ort} dargestellt.\\
+Neben diesen theoretischen Arbeiten müssen dann auch Messdaten gewonnen werden. Dazu ist im Rahmen eines anderen Vorhabens geplant, einen automatisierten Messaufbau zu entwerfen, der Kernverluste und Hysteresekurven Frequenz-, Temperatur- und Amplituden-abhängig vermisst.
 \begin{figure}
 \caption{Vorgehen zur Parameteridentifikation im ortsaufgelösten Fall.}
 \label{fig:vorgehen_ort}
@@ -705,5 +719,31 @@ Neben diesen theoretischen Arbeiten müssen Messdaten gewonnen werden. Dazu ist 
 
 \end{figure}
 \newpage
+\begin{comment}
+	
+\appendix
+\section{Benutzung des Codes}
+Der Code befindet sich in einem \emph{GitHub}-Reposiory. Um daraus einen lauffähigen Container zu erstellen und laufen zu lassen, benötigt man
+\begin{itemize}
+	\item \href{https://www.docker.com/get-started}{Docker}
+	\item \href{https://git-scm.com}{Git}
+\end{itemize}
+Sind diese beiden Programme installiert, klont man das Code-Repository in einen lokalen Ordner und erstellt aus der Vorlage ein Docker-Image.
+\begin{lstlisting}
+	git clone https://github.com/adrianschneider94/forschungspraktikum.git
+	cd forschungspraktikum
+	docker build -t forschungspraktikum .
+\end{lstlisting}
+Mit
+\begin{lstlisting}
+	docker run -it -p 8888:8888 --name forschungspraktikum forschungspraktikum
+\end{lstlisting}
+kann nun ein aus dem Image abgeleiteter Container gestartet werden. Dieser Container startet automatisch einen \emph{Jupyter}-Server, eine Umgebung, in der man \emph{Notebooks} erstellen kann, in denen gleichzeitig programmiert, dokumentiert und visualisiert werden kann.\\
+Um diesen Server zu erreichen, kopiert man aus der Ausgabe des letzten Befehls eine Adresse der Form
+\begin{lstlisting}
+	http://(c8df059f2e3b or 127.0.0.1):8888/?token=c4855645989c1473816a56bda58e42940ece4867be0
+\end{lstlisting}
+ersetzt den Teil \texttt{(c8df059f2e3b or 127.0.0.1)} durch \texttt{localhost} und öffnet die Adresse in einem Browser.
+\end{comment}
 \printbibliography
 \end{document}

@@ -1,0 +1,106 @@
+\RequirePackage{shellesc}
+\documentclass{scrartcl}
+\KOMAoptions
+  {
+    fontsize=26pt,
+    paper=a1,
+    pagesize=pdftex,
+    DIV=calc,
+    headings=standardclasses,
+    headings=small,
+    twoside=on,
+    BCOR=1cm 
+  }
+  
+\usepackage{adrianschneider}
+\DeclareMathOperator{\sign}{sign}
+\DeclareMathOperator{\Langevin}{L}
+\newcommand{\He}{H_\text{e}}
+\newcommand{\Man}{M_\text{an}}
+\newcommand{\Msat}{M_\text{sat}}
+\newcommand{\Mirr}{M_\text{irr}}
+\newcommand{\Mrev}{M_\text{rev}}
+\newcommand{\textref}[1]{\text{(\ref{#1})}}
+\newcommand{\eqr}[1]{\underset{\textref{#1}}{=}}
+\definecolor{gray}{RGB}{92, 92, 92}
+  
+\begin{document} 
+\color{gray}
+\begin{align}
+	\He &= H + \alpha M \quad &&\text{Effektives Feld} \label{eq:h_eff}\\
+	\Man &= \Msat \Langevin\left(\frac{\He}{a}\right) \quad &&\text{Anhysteretische Magnetisierung}  \label{eq:m_an}\\
+	\frac{\dif\Mirr}{\dif \He} &= \frac{\Man - \Mirr}{k \sign\left(\frac{\dif H}{\dif t}\right)} \quad &&\text{Pinning} \label{eq:pinning}\\
+	M &= \Mrev + \Mirr \quad &&\text{Gesamte Magnetisierung} \label{eq:m_gesamt}\\
+	\Mrev &= c(\Man - \Mirr) \quad &&\text{Irreversible Magnetisierung} \label{eq:m_rev}
+\end{align}
+
+
+\begin{align}
+	\frac{\dif M}{\dif \He} &= (1-c) \frac{\dif \Mirr}{\dif \He} + c \frac{\dif \Man}{\dif \He} \label{eq:dm_dhe}
+\end{align}
+
+\begin{equation*}
+	\begin{aligned}
+		\frac{\dif M}{\dif H} &= \frac{\dif M/\dif \He}{1 - \alpha \dif M/\dif \He}
+	\end{aligned}
+\end{equation*}
+
+\begin{equation*}
+\begin{aligned}
+	\frac{\dif B}{\dif H} = \mu_0 \frac{1 + (1-\alpha)\dif M/\dif \He}{1 - \alpha \dif M/\dif \He}. \label{eq:dB_dH}
+\end{aligned}
+\end{equation*}
+
+\begin{equation*}
+	\frac{\dif H}{\dif B} = \frac{1}{\mu_0} \frac{1 - \alpha \dif M/\dif \He}{1 + (1-\alpha)\dif M/\dif \He}
+\end{equation*}
+
+\begin{labeling}{$\Msat$}
+	\item[$\alpha$]{Interdomänenkopplung}
+	\item[$a$]{Domänenwanddichte}
+	\item[$\Msat$]{Sättigungsmagnetisierung}
+	\item[$k$]{Pinning-Energie}
+	\item[$c$]{Magnetisierungsreversibilität}
+\end{labeling}
+
+\begin{equation}
+\begin{aligned}
+	\frac{\dif y}{\dif t} &= f(y, t)
+\end{aligned}
+\end{equation}
+
+\begin{equation*}
+\begin{aligned}
+	\text{Nächster Zeitpunkt} && t_n &= t_{n-1} + h \\
+	\text{i-ter Hilfswert} && k_i &= f\left(y_{n-1} + h \sum_{l=1}^m \beta_{i,l}k_l, t_{n-1} + \alpha_i h\right) \\
+	\text{Nächster Wert} && y_n &= y_{n-1} + h\sum_{l=1}^m y_l k_l
+\end{aligned}
+\end{equation*}
+
+\begin{equation*}
+	\begin{array}{c|ccc}
+	\alpha_1 	& \beta_{1,1}   & \cdots & \beta_{1,m} \\
+	\alpha_2 	& \beta_{2,1}   & \cdots & \beta_{2,m} \\
+	\vdots      & \vdots        & \ddots & \vdots        \\
+	\alpha_m    & \beta_{m,1}   & \cdots & \beta_{m,m} \\
+	\hline
+	            & \gamma_1      & \cdots & \gamma_m
+\end{array}.
+\end{equation*}
+
+
+\begin{equation}
+\renewcommand\arraystretch{1}
+\arraycolsep10
+\begin{array}{c|cccc}
+	0 &&&& \\
+	\tfrac{1}{2} & \tfrac{1}{2} &&& \\
+	\tfrac{1}{2} & 0 & \tfrac{1}{2} && \\
+	1 & 0 & 0 & 1 &\\
+	\hline
+	& \tfrac{1}{6} & \tfrac{1}{3} & \tfrac{1}{3} & \tfrac{1}{6}
+\end{array}
+\end{equation}
+
+
+\end{document}

@@ -238,4 +238,13 @@ namespace jiles_atherton {
 
         return jac;
     }
+
+    vector<double> JilesAthertonModel::get_hessian(vector<double> params) {
+        vector<double> jac(params.size());
+        jac = f.Hessian(params, 0)
+
+        return jac;
+    }
+
+
 }

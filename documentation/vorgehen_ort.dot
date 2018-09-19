@@ -1,6 +1,6 @@
 digraph vorgehen_ort {
 	graph [rankdir=TD];
-	node [shape=box];
+	node [shape=box, fontsize=26];
 	
 	fem [label="Methode der\nfiniten Elemente"];
 	maxwell [label="Maxwell-Gleichungen\nmit inhomogener\nPermeabilität"];

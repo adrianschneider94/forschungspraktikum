@@ -1,0 +1,14 @@
+graph G {
+	subgraph cluster_docker {
+		label="Docker-Container";
+		python [label="Python-Package\nforschungspraktikum"];
+		cpp [label="C++-Module\nJiles-Atherton-Modell,\nAutomatisches Differenzieren\nmit CppAD"];
+		jupyter [label="Jupyter Notebooks\nVisualisierung/Dokumentation"];
+		scipy [label="SciPy\nOptimierungs-Algorithmen"];
+		
+		cpp -- python [label="Cython-Wrapper", labeldistance=10];
+		scipy -- python [label="Minimierung", labeldistance=10];
+		jupyter -- python [label="Visualisierung", labeldistance=10];
+		
+	}
+}

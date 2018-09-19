@@ -40,3 +40,6 @@ cdef class JilesAthertonModel:
     def get_gradient(self, params):
         return self.c_JilesAthertonModel.get_gradient(params)
 
+    def get_hessian(self, params):
+        return self.c_JilesAthertonModel.get_hessian(params)
+
